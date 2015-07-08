@@ -1,0 +1,3 @@
+[submodule "library"]
+	path = library
+	url = git@git.ipo.com:dev1/library.git

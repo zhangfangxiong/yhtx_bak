@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <title><?php echo isset($aMeta['title'])?$aMeta['title']:''?></title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="keywords" content="<?php echo isset($aMeta['keywords'])?$aMeta['keywords']:''?>">
+    <meta name="description" content="<?php echo isset($aMeta['description'])?$aMeta['description']:''?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo 'http://'.Yaf_G::getConf('static','domain');?>/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="<?php echo 'http://'.Yaf_G::getConf('static','domain');?>/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo 'http://'.Yaf_G::getConf('static','domain');?>/css/common.css">
+    <script type="text/javascript" src="<?php echo 'http://'.Yaf_G::getConf('static','domain');?>/js/jquery-1.11.1.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="<?php echo $sStaticRoot?>/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <?php include $_script;?>
+<script type="text/javascript" src="<?php echo 'http://'.Yaf_G::getConf('static','domain');?>/aircraft/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="<?php echo 'http://'.Yaf_G::getConf('static','domain');?>/js/phpjs/json/json_encode.js"></script>
+<script type="text/javascript" src="<?php echo 'http://'.Yaf_G::getConf('static','domain');?>/js/common.js"></script>
+<script type="text/javascript">
+    var aDebug = '';
+    <?php
+    $aDebug = Util_Common::getDebugData();
+    if ($aDebug) {
+        echo 'aDebug = ' . json_encode($aDebug) . ';';
+    }
+    ?>
+    showDebugInfo(aDebug);
+</script>
+</body>
+</html>
