@@ -21,13 +21,6 @@ class Controller_Base extends Yaf_Controller
     protected $aCurrProject = null;
 
     /**
-     * 当前城市
-     * @var unknown
-     */
-    protected $iCurrCityID = null;
-
-    protected $aCurrCity = null;
-    /**
      * 执行Action前执行
      * @see Yaf_Controller::actionBefore()
      */
@@ -53,29 +46,7 @@ class Controller_Base extends Yaf_Controller
     {
         if ($this->autoRender() == true) {
             if (! empty($this->aCurrUser)) {
-                $this->assign('aCurrUser', $this->aCurrUser);
 
-                // 菜单列表
-                $aMenuTree = Model_Menu::getTree($this->aCurrProject['id'], $this->aCurrUser['iUserID']);
-                $this->assign('__aMenuTree__', $aMenuTree);
-                $this->assign('iCurrCityID', $this->iCurrCityID);
-                $this->assign('aCurrCity', $this->aCurrCity);
-
-
-                // 城市列表
-                $this->assign('__aCityList__', Model_City::getPairCitys());
-
-                //当前权限显示城市列表
-                $aCityList = Model_User::getCitiesByUser($this->aCurrUser['iUserID']);
-                $this->assign('__aCurrUserCityList__', $aCityList);
-
-
-                // 项目列表
-                $this->assign('__aProjectList__', Model_Project::getAllProject());
-                $this->assign('aCurrProject', $this->aCurrProject);
-
-                //Request对象
-                $this->assign('oRequest', $this->_request);
             }
             $aDebug = Util_Common::getDebugData();
             if ($aDebug) {
