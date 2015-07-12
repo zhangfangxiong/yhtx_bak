@@ -18,6 +18,7 @@ class Model_Menu extends Model_Base
         $aData = self::getTree($iuserID);
         //获取一级带单列表
         $aSonsData = [];
+        $i = 0;
         foreach ($aData as $key => $value) {
             $aTmp = [];
             $aTmp['id'] = $value['sCode'];
@@ -31,6 +32,10 @@ class Model_Menu extends Model_Base
                     if (isset($v['aSons'])) {
                         $aLastSons = $v['aSons'];
                         foreach ($aLastSons as $ks => $vs) {
+                            if ($i == 0) {
+                                $aTmp['homePage'] = $vs['sCode'];
+                                $i = 1;
+                            }
                             $aTmpDatas['items'][$ks]['id'] = $vs['sCode'];
                             $aTmpDatas['items'][$ks]['text'] = $vs['sMenuName'];
                             $aTmpDatas['items'][$ks]['href'] = $vs['sMenuUrl'];

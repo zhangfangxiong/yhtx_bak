@@ -17,6 +17,11 @@ class Controller_Index_Index extends Controller_Base
 
     }
 
+    public function welcomeAction()
+    {
+
+    }
+
     public function logoutAction ()
     {
         Util_Cookie::delete(Yaf_G::getConf('authkey', 'cookie'));
