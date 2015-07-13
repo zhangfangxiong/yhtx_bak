@@ -5,12 +5,12 @@
  * @author xiejinci
  *
  */
-class Model_Menu extends Model_Base
+class Model_CateGory extends Model_Base
 {
 
     const DB_NAME = 'yhtx';
 
-    const TABLE_NAME = 'admin_menu';
+    const TABLE_NAME = 'goods_category';
 
     //按需求拼装数据结构
     public static function getMenus($iuserID=0)
