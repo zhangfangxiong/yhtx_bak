@@ -12,6 +12,11 @@ class Controller_Index_Index extends Controller_Base
         //return $this->redirect($sUrl);
     }
 
+    public function welcomeAction()
+    {
+
+    }
+
     public function loginAction ()
     {
 
