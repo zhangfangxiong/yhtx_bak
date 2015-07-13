@@ -7,13 +7,28 @@ class Controller_Goods_Category extends Controller_Base
      */
     public function indexAction()
     {
-        $aCategoryData = Model_Category::getTree();
+        //$aCategoryData = Model_Category::getTree();
     }
 
     //添加分类
     public function addAction()
     {
-
+        $aParam['sName'] = $this->getParam('sName');
+        $aParam['iParentID'] = intval($this->getParam('iParentID'));
+        if ($this->isPost()) {
+            $aParam['iCreateUser'] = $aParam['iUpdateUser'] = $this->aCurrUser['iUserID'];
+            $aNews = $this->_checkData($aParam);
+            $aData = Model_Category::exsistCategory($aParam['sName'],$aParam['iParentID']);
+            if (!empty($aData)) {
+                return $this->showMsg('已存在该分类', false);
+            }
+            if (Model_Category::addData($aNews)) {
+                return $this->showMsg('分类添加成功', true);
+            }
+        } else {
+            $aData = Model_Category::getAllTree('iID');
+            print_r($aData);die;
+        }
     }
 
     public function actionAfter()
