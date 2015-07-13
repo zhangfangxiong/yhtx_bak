@@ -12,10 +12,6 @@ class Model_Category extends Model_Base
 
     const TABLE_NAME = 'goods_category';
 
-    protected static $aRootTree = [];
-
-    protected static $aTree = [];
-
     //获取所有数据(key为数组的key)
     public static function getAllTree($sKey = '')
     {
@@ -37,45 +33,67 @@ class Model_Category extends Model_Base
         return $aList;
     }
 
-    //获取顶级分类
-    public static function getRootTree($aList)
+    public static function getMenu()
     {
-        if (!empty(self::$aRootTree)) {
-            //按照父ID分组
-            $aParents = array();
-            foreach ($aList as $key => $value) {
-                if ($value['iParentID'] == 0) {
-                    $aParents[$value['iID']] = $value;
-                    //unset($aList[$key]);
-                }
-            }
-            self::$aRootTree = $aParents;
-        }
-        return self::$aRootTree;
+        $aTree = self::getTree();
+        $aList = array();
+        self::_toList($aTree, $aList);
+        return $aList;
     }
 
     //获取树状menu
-    public static function getTree($aList)
+    public static function getTree()
     {
-        $aRoot = self::getRootTree($aList);
-        while (count($aRoot) != count($aList)) {
-            foreach ($aList as $key => $value) {
-                if (isset($aList[$value['iParentID']])) {
-                    $aList[$value['iParentID']]['aSon'][] = $value;
-                    unset($aList[$key]);
-                }
-            }
-            self::getTree($aList);
+        $aList =self::getAllTree();
+        $aParent = array();
+        //整理父menu
+        foreach ($aList as $key => $value) {
+            $aParent[$value['iParentID']][] = $value;
         }
+        unset($aList);
+        return self::_buildTree ($aParent, 0, 0, '');
+    }
 
-        return $aList;
+    private static function _buildTree ($aParent, $iParentID, $iLevel, $sPath)
+    {
+        $aTree = array();
+        if (isset($aParent[$iParentID])) {
+            foreach ($aParent[$iParentID] as $aMenu) {
+                $aMenu['iLevel'] = $iLevel;
+                $aMenu['sPath'] = $sPath;
+                $aMenu['aChild'] = self::_buildTree($aParent, $aMenu['iID'], $iLevel + 1, $sPath . ' menup' . $aMenu['iID']);
+                if (!empty($aMenu)) {
+                    foreach ($aMenu['aChild'] as $v) {
+                        if ($v['iCurr'] == 1) {
+                            $aMenu['iCurr'] = 1;
+                            break;
+                        }
+                    }
+                }
+                $aTree[] = $aMenu;
+            }
+        }
+        return $aTree;
+    }
+
+    private static function _toList ($aTree, &$aList)
+    {
+        foreach ($aTree as $aMenu) {
+            $aMenu['bIsLeaf'] = empty($aMenu['aChild']) ? 1 : 0;
+            $aChild = $aMenu['aChild'];
+            unset($aMenu['aChild']);
+            $aList[] = $aMenu;
+            if ($aMenu['bIsLeaf'] == 0) {
+                self::_toList($aChild, $aList);
+            }
+        }
     }
 
     public static function exsistCategory($sName, $iParent)
     {
         $aWhere = array(
-            'sName' => $sName,
-            'iParent' => $iParent,
+            'sName like' => $sName,
+            'iParentID' => $iParent,
         );
         $aList = self::getRow(array(
             'where' => $aWhere,

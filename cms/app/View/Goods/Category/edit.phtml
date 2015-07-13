@@ -37,7 +37,7 @@ placeholder
                         $iMenuID = isset($aMenu['iParentID'])?$aMenu['iParentID']:'';
                         foreach ($aTree as $v){
                             ?>
-                            <option value="<?php echo $v['iMenuID']?>" <?php echo $v['iMenuID']==$iMenuID?'selected':'';?>><?php echo ($v['iLevel']>0?'└'.str_repeat('─', $v['iLevel'] * 2):'') . $v['sMenuName']?></option>
+                            <option value="<?php echo $v['iID']?>" <?php echo $v['iID']==$iMenuID?'selected':'';?>><?php echo ($v['iLevel']>0?'└'.str_repeat('─', $v['iLevel'] * 2):'') . $v['sName']?></option>
                         <?php }}?>
                 </select>
             </div>

@@ -26,8 +26,8 @@ class Controller_Goods_Category extends Controller_Base
                 return $this->showMsg('分类添加成功', true);
             }
         } else {
-            $aData = Model_Category::getAllTree('iID');
-            print_r($aData);die;
+            $aData = Model_Category::getMenu();
+            $this->assign('aTree',$aData);
         }
     }
 
