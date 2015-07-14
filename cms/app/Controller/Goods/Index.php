@@ -36,6 +36,8 @@ class Controller_Goods_Index extends Controller_Base
         $aParam['iETime'] = strtotime($aParam['iETime']);
         $this->assign('aParam', $aParam);
         $this->assign('aList', $aList);
+        $aData = Model_Category::getMenu();
+        $this->assign('aTree',$aData);
     }
 
     /**
