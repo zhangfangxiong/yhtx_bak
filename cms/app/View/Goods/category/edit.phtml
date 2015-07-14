@@ -5,12 +5,12 @@ placeholder
 
 <h3 style="text-align: center">添加产品类别</h3>
 <div class="pbody clearfix">
-    <form id="myform" class="form-horizontal" role="form" method="post">
-        <input type="hidden" class="form-control" name="iMenuID" value="<?php echo isset($aMenu['iMenuID'])?$aMenu['iMenuID']:''?>">
+    <form id="myform" class="form-horizontal" role="form" method="post" action="">
+        <input type="hidden" class="form-control" name="iID" value="<?php echo isset($aMenu['iID'])?$aMenu['iID']:''?>">
         <div class="form-group has-feedback">
             <label class="col-sm-2 control-label"><strong style="color:red;">*</strong> 种类名称：</label>
             <div class="col-sm-3 has-success">
-                <input type="text" class="form-control input-validate" validate="!length:2-20" name="sMenuName" value="<?php echo isset($aMenu['sMenuName'])?$aMenu['sMenuName']:''?>">
+                <input type="text" class="form-control input-validate" validate="!length:2-20" name="sName" value="<?php echo isset($aMenu['iName'])?$aMenu['iName']:''?>">
                 <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
             </div>
             <div class="col-sm-3 validate_checktip">
@@ -29,7 +29,7 @@ placeholder
 -->
         <div class="form-group">
             <label class="col-sm-2 control-label"><strong style="color:red;">*</strong> 父级种类：</label>
-            <div class="col-sm-10">
+            <div class="col-sm-3 has-success">
                 <select name="iParentID" class="form-control input-validate col-sm-10">
                     <option value="0">顶级种类</option>
                     <?php
@@ -37,7 +37,7 @@ placeholder
                         $iMenuID = isset($aMenu['iParentID'])?$aMenu['iParentID']:'';
                         foreach ($aTree as $v){
                             ?>
-                            <option value="<?php echo $v['iMenuID']?>" <?php echo $v['iMenuID']==$iMenuID?'selected':'';?>><?php echo ($v['iLevel']>0?'└'.str_repeat('─', $v['iLevel'] * 2):'') . $v['sMenuName']?></option>
+                            <option value="<?php echo $v['iID']?>" <?php echo $v['iID']==$iMenuID?'selected':'';?>><?php echo ($v['iLevel']>0?'└'.str_repeat('─', $v['iLevel'] * 2):'') . $v['sName']?></option>
                         <?php }}?>
                 </select>
             </div>
@@ -54,7 +54,7 @@ placeholder
             $.post(form.action, $(form).serialize(), function(ret){
                 alert(ret.data);
                 if (ret.status) {
-                    location.href = '/menu/list/';
+                    location.href = '<?php echo $sListUrl; ?>';
                 }
             }, 'json');
             return false;
