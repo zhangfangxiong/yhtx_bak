@@ -80,7 +80,7 @@ class Controller_Base extends Yaf_Controller
     protected function _checkData($param = array())
     {
         $aRow = empty($param) ? $this->_getParams() : $param;
-        if (!Util_Validate::isCLength($aRow['sName'], 2, 20)) {
+        if (!Util_Validate::isLength($aRow['sName'], 2, 20)) {
             return $this->showMsg('名称长度范围为2到20个字！', false);
         }
         return $aRow;

@@ -18,12 +18,15 @@ class Controller_Goods_Category extends Controller_Base
         $aParam['iParentID'] = intval($this->getParam('iParentID'));
         if ($this->isPost()) {
             $aParam['iCreateUser'] = $aParam['iUpdateUser'] = $this->aCurrUser['iUserID'];
-            $aNews = $this->_checkData($aParam);
+            $aCategory = $this->_checkData($aParam);
+            if (empty($aCategory)) {
+                return null;
+            }
             $aData = Model_Category::exsistCategory($aParam['sName'],$aParam['iParentID']);
             if (!empty($aData)) {
                 return $this->showMsg('已存在该分类', false);
             }
-            if (Model_Category::addData($aNews)) {
+            if (Model_Category::addData($aCategory)) {
                 return $this->showMsg('分类添加成功', true);
             }
         } else {

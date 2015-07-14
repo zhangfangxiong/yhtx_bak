@@ -159,14 +159,12 @@
 		var curr = $(e);
 		var tipele = curr.parent();
 		if (status == 2) {
-			console.log(111);
 			tipele.addClass('has-success');
 			tipele.removeClass('has-error');
 			tipele.find('span').addClass('glyphicon-ok');
 			tipele.find('span').removeClass('glyphicon-remove');
 			tipele.parent().find('.validate_checktip').html('');
 		} else if (status == 1) {
-			console.log(222);
 			tipele.addClass('has-success');
 			tipele.removeClass('has-error');
 			tipele.find('span').addClass('glyphicon-ok');
@@ -174,7 +172,6 @@
 			tipele.parent().find('.validate_checktip').html('');
 			tipele.parent().find('.validate_checktip').removeClass('bg-danger');
 		} else {
-			console.log(333);
 			tipele.addClass('has-error');
 			tipele.removeClass('has-success');
 			tipele.find('span').addClass('glyphicon-remove');

@@ -4,3 +4,11 @@
     line-height: 34px;
     color: #adadad;
 }
+
+.dropdown-menu {
+    min-width: 600px;
+}
+.p-content {
+    width: 1100px;
+    margin: 0 auto;
+}
