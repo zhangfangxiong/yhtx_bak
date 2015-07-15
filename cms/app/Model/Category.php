@@ -93,6 +93,7 @@ class Model_Category extends Model_Base
     public static function exsistCategory($sName, $iParent)
     {
         $aWhere = array(
+            'iStatus' => 1,
             'sName like' => $sName,
             'iParentID' => $iParent,
         );

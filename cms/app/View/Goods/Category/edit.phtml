@@ -3,14 +3,14 @@ placeholder
 这个标签显示表单备注
 -->
 
-<h3 style="text-align: center">添加产品类别</h3>
+<h3 style="text-align: center"><?php echo isset($aCategory['iID'])?'修改':'添加'?>产品类别</h3>
 <div class="p-content">
     <form id="myform" class="form-horizontal" role="form" method="post" action="">
-        <input type="hidden" class="form-control" name="iID" value="<?php echo isset($aMenu['iID'])?$aMenu['iID']:''?>">
+        <input type="hidden" class="form-control" name="iID" value="<?php echo isset($aCategory['iID'])?$aCategory['iID']:''?>">
         <div class="form-group has-feedback">
             <label class="col-sm-2 control-label"><strong style="color:red;">*</strong> 种类名称：</label>
             <div class="col-sm-3 has-success">
-                <input type="text" class="form-control input-validate" validate="!length:2-20" name="sName" value="<?php echo isset($aMenu['iName'])?$aMenu['iName']:''?>">
+                <input type="text" class="form-control input-validate" validate="!length:2-20" name="sName" value="<?php echo isset($aCategory['sName'])?$aCategory['sName']:''?>">
                 <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
             </div>
             <div class="col-sm-3 validate_checktip">
@@ -21,7 +21,7 @@ placeholder
         <div class="form-group has-feedback">
             <label class="col-sm-2 control-label"><strong style="color:red;">*</strong> 种类名称：</label>
             <div class="col-sm-3 has-error">
-                <input type="text" class="form-control input-validate" validate="!length:2-20" name="sMenuName" value="<?php echo isset($aMenu['sMenuName'])?$aMenu['sMenuName']:''?>">
+                <input type="text" class="form-control input-validate" validate="!length:2-20" name="sMenuName" value="<?php echo isset($aCategory['sMenuName'])?$aCategory['sMenuName']:''?>">
                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                 <span class="validate_checktip"></span>
             </div>
@@ -34,10 +34,10 @@ placeholder
                     <option value="0">顶级种类</option>
                     <?php
                     if(!empty($aTree)){
-                        $iMenuID = isset($aMenu['iParentID'])?$aMenu['iParentID']:'';
+                        $iCategoryID = isset($aCategory['iParentID'])?$aCategory['iParentID']:'';
                         foreach ($aTree as $v){
                             ?>
-                            <option value="<?php echo $v['iID']?>" <?php echo $v['iID']==$iMenuID?'selected':'';?>><?php echo ($v['iLevel']>0?'└'.str_repeat('─', $v['iLevel'] * 2):'') . $v['sName']?></option>
+                            <option value="<?php echo $v['iID']?>" <?php echo $v['iID']==$iCategoryID?'selected':'';?>><?php echo ($v['iLevel']>0?'└'.str_repeat('─', $v['iLevel'] * 2):'') . $v['sName']?></option>
                         <?php }}?>
                 </select>
             </div>

@@ -1,19 +1,53 @@
+<style>
+    .dropdown-menu > li > a {
+        display: inline;
+        padding: 3px 5px;
+        height: 20px;
+        line-height: 20px;
+    }
+</style>
 <div class="p-content">
     <h3 style="text-align: center">产品类别列表</h3>
     <div class="btn-group col-sm-3">
-        <button type="button" class="btn btn-block btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+        <button type="button" class="btn btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
             产品分类列表<span class="caret"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
+            <?php
+            if(!empty($aTree)){
+                foreach ($aTree as $k => $v){
+                    if ($v['iLevel'] == 0 && $k > 0) {
+                        ?>
+                        <li role="separator" class="divider"></li>
+                        <?php
+                    }
+                    ?>
+                    <li>
+                        <a class="col-sm-10" href="javascript:void(0)"><?php echo ($v['iLevel']>0?'└'.str_repeat('─', $v['iLevel'] * 2):'') . $v['sName']?></a>
+                        <a title="编辑" href="<?php echo $sEditUrl; ?>?id=<?php echo $v['iID'] ?>"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i></a>
+                        <a title="删除" class="category_delete" href="<?php echo $sDelUrl; ?>?id=<?php echo $v['iID'] ?>"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
+                    </li>
+                <?php }}?>
         </ul>
     </div>
+    <a title="增加分类" href="<?php echo $sAddUrl; ?>">
     <button class="btn btn-primary" id="menu_add">
-        <i class="icon-plus"></i> 增加菜单
+        <i class="icon-plus"></i> 增加分类
     </button>
+        </a>
 </div>
+
+<script>
+    $('.category_delete').click(function () {
+        if (confirm("删除分类，对应的所有子分类也将删除，您确认要删除该分类吗？")) {
+            $.get(this.href, function (ret) {
+                alert(ret.data);
+                if (ret.status) {
+                    location.reload();
+                }
+            }, 'json');
+        }
+        return false;
+    });
+</script>
