@@ -15,17 +15,18 @@ class Controller_Goods_Index extends Controller_Base
         $aParam['iCostsEnd'] = intval($this->getParam('iCostsEnd'));//成本结束价
         $aParam['iPriceStart'] = intval($this->getParam('iPriceStart'));//起始价格
         $aParam['iPriceEnd'] = intval($this->getParam('iPriceEnd'));//结束价格
-        $aParam['iCatoryID'] = intval($this->getParam('iCatoryID'));//种类ID
+        $aParam['iCatID'] = intval($this->getParam('iCatID'));//种类ID
         $aParam['iIsHot'] = intval($this->getParam('iIsHot'));//是否热门
         $aParam['iIsRecommend'] = intval($this->getParam('iIsRecommend'));//是否推荐
-        $aParam['iCreateStartTime'] = intval($this->getParam('iCreateStartTime'));//创建开始时间
-        $aParam['iCreateEndTime'] = intval($this->getParam('iCreateEndTime'));//创建结束时间
+        $aParam['iSTime'] = intval($this->getParam('iSTime'));//发布开始时间
+        $aParam['iETime'] = intval($this->getParam('iETime'));//发布结束时间
         $aParam['iUnlockType'] = intval($this->getParam('iUnlockType'));//解锁类型
         $aParam['iAgentRateStart'] = intval($this->getParam('iAgentRateStart'));//代理商提成比例
         $aParam['iAgentRateEnd'] = intval($this->getParam('iAgentRateEnd'));//代理商提成比例
         $aParam['iUnlockLevel'] = intval($this->getParam('iUnlockLevel'));//解锁等级
         $aParam['iUnlockPointStart'] = intval($this->getParam('iUnlockPointStart'));//解锁所需解锁点
         $aParam['iUnlockPointEnd'] = intval($this->getParam('iUnlockPointEnd'));//解锁所需解锁点
+        $aParam['iPublishStatus'] = intval($this->getParam('iPublishStatus'));//发布状态
 
 
         $iPage = intval($this->getParam('page'));
@@ -36,6 +37,10 @@ class Controller_Goods_Index extends Controller_Base
         $aParam['iETime'] = strtotime($aParam['iETime']);
         $this->assign('aParam', $aParam);
         $this->assign('aList', $aList);
+        $aData = Model_Category::getMenu();
+        $this->assign('aTree',$aData);
+        $this->assign('aUnlockType',$this->aUnlockType);
+        $this->assign('aUnlockLevel',$this->aUnlockLevel);
     }
 
     /**

@@ -12,22 +12,12 @@
             margin-left: 5px;
             width: 70px;
         }
- 		.section select {
-            margin-left: 5px;
-            width: 75px;
-        }
     </style>
 </head>
 <body>
 <div class="section">
     <span><var id="lang_tdBkColor"></var></span>
-    <input type="text" id="J_tone"/><br>
-    <span><var id="lang_tdBkAlign"></var></span>
-    <select id="J_align">
-    	<option value="left">Left</option>
-    	<option value="center">Center</option>
-    	<option value="right">Right</option>
-    </select>
+    <input type="text" id="J_tone"/>
 </div>
 <script type="text/javascript">
     var tone = $G("J_tone"),
@@ -38,7 +28,6 @@
                 editor:editor,
                 content:colorPiker
             });
-    var talign = $G("J_align");
     domUtils.on(tone, "click", function () {
         colorPop.showAnchor(tone);
     });
@@ -54,7 +43,7 @@
         colorPop.hide();
     });
     dialog.onok=function(){
-        editor.execCommand("edittd",tone.value,talign.value);
+        editor.execCommand("edittd",tone.value);
     };
 
     var start = editor.selection.getStart(),
@@ -64,16 +53,9 @@
         if(/^#/.test(color)){
             tone.value = color
         }
-        var align = domUtils.getComputedStyle(cell,'text-align');
-        for (var i = 0; i < talign.options.length; i++)
-        {
-        	if (talign.options[i].value == align) {
-        		talign.options[i].selected = true;
-        	} else {
-        		talign.options[i].selected = false;
-        	}
-        }
+
     }
+
 </script>
 </body>
 </html>

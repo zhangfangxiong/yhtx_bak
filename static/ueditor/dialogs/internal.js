@@ -1,12 +1,5 @@
 (function () {
     var parent = window.parent;
-    if (/fangjiadp/.test(location.href)) {
-    	document.domain = 'fangjiadp.com';
-    } else {
-    	document.domain = 'ipo.com';
-    }
-	document.domain = parent.global.domain;
-    
     //dialog对象
     dialog = parent.$EDITORUI[window.frameElement.id.replace( /_iframe$/, '' )];
     //当前打开dialog的编辑器实例

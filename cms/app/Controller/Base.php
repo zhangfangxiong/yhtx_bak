@@ -20,6 +20,11 @@ class Controller_Base extends Yaf_Controller
      */
     protected $aCurrProject = null;
 
+    //解锁类型
+    protected $aUnlockType =['级别解锁','解锁点解锁'];
+    //解锁等级
+    protected $aUnlockLevel =[1,2,3,4,5,6,7,8,9,10];
+
     /**
      * 执行Action前执行
      * @see Yaf_Controller::actionBefore()

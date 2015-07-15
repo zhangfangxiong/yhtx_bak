@@ -1,188 +1,242 @@
 <style>
-    .sousuo_now {
-        margin: 10px 0px 10px 0px;
-    }
-
-    .list-caozuo {
+    .list .form-group {
         margin-bottom: 10px;
+        padding: 0 5px;
     }
 </style>
-<div class="pheader clearfix">商品列表</div>
-<div class="pbody clearfix">
-    <form class="form-inline search-form" role="form" method="post" id="myform" action="<?= $sListUrl ?>">
-        <div class="row sousuo_now">
-            <div class="form-group .col-xs-2">
-                分类：
-                <select class="form-control input-sm" name="iCategoryID">
-                    <option value="0">请选择</option>
-                    <?php foreach ($aCategory as $k => $v) { ?>
+<h3 class="page-header">商品列表</h3>
+
+<form class="form-inline" role="form" method="post" id="myform" action="<?= $sListUrl ?>">
+    <div class="list">
+        <div class="form-group">
+            <label class="control-label">发布开始时间：</label>
+            <input name="iSTime" id="iSTime" autocomplete="off" class="laydatetime form-control" validate="" type="text"
+                   value="<?php echo (isset($aParam['iSTime']) && $aParam['iSTime']) ? date('Y-m-d H:i:s',
+                       $aParam['iSTime']) : '' ?>">
+        </div>
+        <div class="form-group">
+            <label class="control-label">发布结束时间：</label>
+            <input name="iETime" id="iETime" autocomplete="off" class="laydatetime form-control" validate="" type="text"
+                   value="<?php echo (isset($aParam['iETime']) && $aParam['iETime']) ? date('Y-m-d H:i:s',
+                       $aParam['iETime']) : '' ?>">
+        </div>
+        <div class="form-group">
+            <label class="control-label">产品名称：</label>
+            <input type="text" value="<?php echo isset($aParam['sName']) ? $aParam['sName'] : '' ?>"
+                   class="form-control input-sm" name="sName">
+        </div>
+        <div class="form-group">
+            <label class="control-label">产品描述：</label>
+            <input type="text" value="<?php echo isset($aParam['sDesc']) ? $aParam['sDesc'] : '' ?>"
+                   class="form-control input-sm" name="sDesc">
+        </div>
+        <div class="form-group">
+            <label class="control-label">成本开始价：</label>
+            <input type="text" value="<?php echo isset($aParam['iCostsStart']) ? $aParam['iCostsStart'] : '' ?>"
+                   class="form-control input-sm" name="iCostsStart">
+        </div>
+        <div class="form-group">
+            <label class="control-label">成本结束价：</label>
+            <input type="text" value="<?php echo isset($aParam['iCostsEnd']) ? $aParam['iCostsEnd'] : '' ?>"
+                   class="form-control input-sm" name="iCostsEnd">
+        </div>
+        <div class="form-group">
+            <label class="control-label">起始价格：</label>
+            <input type="text" value="<?php echo isset($aParam['iPriceStart']) ? $aParam['iPriceStart'] : '' ?>"
+                   class="form-control input-sm" name="iPriceStart">
+        </div>
+        <div class="form-group">
+            <label class="control-label">结束价格：</label>
+            <input type="text" value="<?php echo isset($aParam['iPriceEnd']) ? $aParam['iPriceEnd'] : '' ?>"
+                   class="form-control input-sm" name="iPriceEnd">
+        </div>
+        <div class="form-group">
+            <label class="control-label">代理商提成开始比例：</label>
+            <input type="text" value="<?php echo isset($aParam['iAgentRateStart']) ? $aParam['iAgentRateStart'] : '' ?>"
+                   class="form-control input-sm" name="iAgentRateStart">
+        </div>
+        <div class="form-group">
+            <label class="control-label">代理商提成结束比例：</label>
+            <input type="text" value="<?php echo isset($aParam['iAgentRateEnd']) ? $aParam['iAgentRateEnd'] : '' ?>"
+                   class="form-control input-sm" name="iAgentRateEnd">
+        </div>
+        <div class="form-group">
+            <label class="control-label">解锁所需开始解锁点：</label>
+            <input type="text" value="<?php echo isset($aParam['iUnlockPointStart']) ? $aParam['iUnlockPointStart'] : '' ?>"
+                   class="form-control input-sm" name="iUnlockPointStart">
+        </div>
+        <div class="form-group">
+            <label class="control-label">解锁所需结束解锁点：</label>
+            <input type="text" value="<?php echo isset($aParam['iUnlockPointEnd']) ? $aParam['iUnlockPointEnd'] : '' ?>"
+                   class="form-control input-sm" name="iUnlockPointEnd">
+        </div>
+        <div class="form-group">
+            <label class="control-label">ID：</label>
+            <input type="text" value="<?php echo isset($aParam['iNewsID']) ? $aParam['iNewsID'] : '' ?>"
+                   class="form-control input-sm" autocomplete="off" name="iNewsID" id="iNewsID">
+        </div>
+        <div class="form-group">
+            <label class="control-label">分类：</label>
+            <select name="iCatID" class="form-control input-validate">
+                <option value="0">请选择</option>
+                <?php
+                if (!empty($aTree)) {
+                    $iMenuID = isset($aMenu['iParentID']) ? $aMenu['iParentID'] : '';
+                    foreach ($aTree as $v) {
+                        ?>
                         <option
-                            value="<?php echo $k ?>" <?php echo isset($aParam['iCategoryID']) && $k == $aParam['iCategoryID'] ? 'selected' : '' ?>><?php echo $v ?></option>
-                    <?php } ?>
-                </select>
-            </div>
-            <div class="form-group .col-xs-2">
-                发布开始时间：
-                <input name="iSTime" autocomplete="off" class="laydatetime form-control" validate="" type="text"
-                       value="<?php echo (isset($aParam['iSTime']) && $aParam['iSTime']) ? date('Y-m-d H:i:s',
-                           $aParam['iSTime']) : '' ?>" class="form-control">
-            </div>
-            <div class="form-group .col-xs-2">
-                发布结束时间：
-                <input name="iETime"  autocomplete="off" class="laydatetime form-control" validate="" type="text"
-                       value="<?php echo (isset($aParam['iETime']) && $aParam['iETime']) ? date('Y-m-d H:i:s',
-                           $aParam['iETime']) : '' ?>" class="form-control">
-            </div>
-            <div class="form-group .col-xs-2">
-                状态：
-                <select class="form-control input-sm" name="iPublishStatus">
-                    <option value="-1">请选择</option>
-                    <option
-                        value="1" <?php echo isset($aParam['iPublishStatus']) && 1 == $aParam['iPublishStatus'] ? 'selected' : '' ?>>
-                        已发布
-                    </option>
-                    <option
-                        value="0" <?php echo isset($aParam['iPublishStatus']) && 0 == $aParam['iPublishStatus'] ? 'selected' : '' ?>>
-                        未发布
-                    </option>
-                </select>
-            </div>
-            <div class="form-group .col-xs-2">
-                标题：
-                <input type="text" value="<?php echo isset($aParam['sTitle']) ? $aParam['sTitle'] : '' ?>"
-                       class="form-control input-sm" name="sTitle">
-            </div>
+                            value="<?php echo $v['iID'] ?>"><?php echo ($v['iLevel'] > 0 ? '└' . str_repeat('─', $v['iLevel'] * 2) : '') . $v['sName'] ?></option>
+                    <?php }
+                } ?>
+            </select>
         </div>
-        <div class="row sousuo_now">
-            <div class="form-group .col-xs-2">
-                <input type="hidden" id="iAuthorID" name="iAuthorID"
-                       value="<?php echo isset($aParam['iAuthorID']) ? $aParam['iAuthorID'] : '' ?>">
-                作者：
-                <input id="sAuthor" type="text"
-                       value="<?php echo isset($aParam['sAuthor']) ? $aParam['sAuthor'] : '' ?>"
-                       class="form-control input-sm" autocomplete="off" name="sAuthor">
-            </div>
-            <div class="form-group .col-xs-2">
-                <input type="hidden" id="iLoupanID" name="iLoupanID"
-                       value="<?php echo isset($aParam['iLoupanID']) ? $aParam['iLoupanID'] : '' ?>">
-                楼盘：
-                <input type="text" autocomplete="off"
-                       value="<?php echo isset($aParam['sLoupanName']) ? $aParam['sLoupanName'] : '' ?>"
-                       class="form-control input-sm" name="sLoupanName" id="sLoupanName">
-            </div>
-            <div class="form-group .col-xs-2">
-                <input type="hidden" id="iTagID" name="iTagID"
-                       value="<?php echo isset($aParam['iTagID']) ? $aParam['iTagID'] : '' ?>">
-                标签：
-                <input type="text" value="<?php echo isset($aParam['sTagName']) ? $aParam['sTagName'] : '' ?>"
-                       class="form-control input-sm" autocomplete="off" name="sTagName" id="sTagName">
-            </div>
-            <div class="form-group .col-xs-2">
-                ID：
-                <input type="text" value="<?php echo isset($aParam['iNewsID']) ? $aParam['iNewsID'] : '' ?>"
-                       class="form-control input-sm" autocomplete="off" name="iNewsID" id="iNewsID">
-            </div>
-            <div class="form-group .col-xs-2">
-                <input type="hidden" id="fOrder" name="sOrder"
-                       value="<?php echo isset($aParam['sOrder']) ? $aParam['sOrder'] : '' ?>">
-                <input type="submit" id="formbtn" class="btn btn-default btn-sm" value="搜索">
-            </div>
-        </div>
-    </form>
-    <hr>
-    <div class="btn-toolbar list-toolbar list-caozuo">
-        <button class="btn btn-primary" id="news_add">
-            <i class="icon-plus"></i> 增加资讯
-        </button>
-        <button class="btn btn-primary" id="news_batch_publish">
-            <i class="icon-play"></i> 批量发布
-        </button>
-        <button class="btn btn-primary" id="news_batch_off">
-            <i class="icon-stop"></i> 批量下架
-        </button>
-        <button class="btn btn-primary" id="news_batch_delete">
-            <i class="icon-remove"></i> 批量删除
-        </button>
-        <div style="float:right">
-            <label> 排序方式：</label>
-            <select class="input-sm" id="sOrder">
-                <option value="iPublishTime DESC">按发布时间倒序</option>
+        <div class="form-group">
+            <label class="control-label">是否热门：</label>
+            <select class="form-control input-sm" name="iIsHot">
+                <option value="-1">请选择</option>
                 <option
-                    value="iPublishTime ASC" <?php echo isset($aParam['sOrder']) && 'iPublishTime ASC' == $aParam['sOrder'] ? 'selected' : '' ?>>
-                    按发布时间正序
+                    value="1" <?php echo isset($aParam['iIsHot']) && 1 == $aParam['iIsHot'] ? 'selected' : '' ?>>
+                    是
                 </option>
                 <option
-                    value="iUpdateTime ASC" <?php echo isset($aParam['sOrder']) && 'iUpdateTime ASC' == $aParam['sOrder'] ? 'selected' : '' ?>>
-                    按编辑时间正序
-                </option>
-                <option
-                    value="iUpdateTime DESC" <?php echo isset($aParam['sOrder']) && 'iUpdateTime DESC' == $aParam['sOrder'] ? 'selected' : '' ?>>
-                    按编辑时间倒序
+                    value="0" <?php echo isset($aParam['iIsHot']) && 0 == $aParam['iIsHot'] ? 'selected' : '' ?>>
+                    否
                 </option>
             </select>
         </div>
+        <div class="form-group">
+            <label class="control-label">是否推荐：</label>
+            <select class="form-control input-sm" name="iIsRecommend">
+                <option value="-1">请选择</option>
+                <option
+                    value="1" <?php echo isset($aParam['iIsRecommend']) && 1 == $aParam['iIsRecommend'] ? 'selected' : '' ?>>
+                    是
+                </option>
+                <option
+                    value="0" <?php echo isset($aParam['iIsRecommend']) && 0 == $aParam['iIsRecommend'] ? 'selected' : '' ?>>
+                    否
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">状态：</label>
+            <select class="form-control input-sm" name="iPublishStatus">
+                <option value="-1">请选择</option>
+                <option
+                    value="1" <?php echo isset($aParam['iPublishStatus']) && 1 == $aParam['iPublishStatus'] ? 'selected' : '' ?>>
+                    已发布
+                </option>
+                <option
+                    value="0" <?php echo isset($aParam['iPublishStatus']) && 0 == $aParam['iPublishStatus'] ? 'selected' : '' ?>>
+                    未发布
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="hidden" id="fOrder" name="sOrder"
+                   value="<?php echo isset($aParam['sOrder']) ? $aParam['sOrder'] : '' ?>">
+            <input type="submit" id="formbtn" class="btn btn-default btn-sm" value="搜索">
+        </div>
     </div>
-    <table class="table table-bordered table-hover">
-        <thead>
-        <tr>
-            <th class="text-center">
-                <input type="checkbox" id="news_all_check" name="news_all_check" value="">
-            </th>
-            <th class="col-sm-1 text-center">ID</th>
-            <th>标题</th>
-            <th class="text-center">分类</th>
-            <th class="text-center">作者</th>
-            <th class="text-center">发布状态</th>
-            <th class="text-center">发布时间</th>
-            <th class="text-center">最后编辑时间</th>
-            <th class="text-center">操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($aList['aList'] as $v) { ?>
-            <tr id="tr_<?php echo $v['iNewsID'] ?>">
-                <td class="text-center">
-                    <input type="checkbox" name="news_check_id" id="news_check_id_<?php echo $v['iNewsID'] ?>"
-                           value="<?php echo $v['iNewsID'] ?>">
-                </td>
-                <td class="col-sm-1 text-center"><?php echo $v['iNewsID'] ?></td>
-                <?php
-                if (isset($aCityCode[$v['iCityID']])) {
-                    $sNewCityCode = $aCityCode[$v['iCityID']];
-                } else {
-                    $sNewCityCode = $aCurrCity['sFullPinyin'];
-                }
-                ?>
-                <td><?php if ($v['iPublishStatus']) {?><a target="_blank" href="<?php echo 'http://'.Yaf_G::getConf('news', 'domain').'/'.$sNewCityCode.'/news/detail/'.$v['iNewsID']; ?>"><?php echo $v['sTitle'] ?></a><?php } else { echo $v['sTitle'] ; }?>
-                </td>
-                <td class="text-center"><?php echo @$aCategory[$v['iCategoryID']] ?></td>
-                <td class="text-center"><?php echo $v['sAuthor'] ?></td>
-                <td class="text-center"
-                    id="status_<?php echo $v['iNewsID'] ?>"><?php echo $v['iPublishStatus'] ? '已发布' : '未发布' ?></td>
-                <td class="text-center"><?php echo date('Y-m-d H:i', $v['iPublishTime']) ?></td>
-                <td class="text-center"><?php echo date('Y-m-d H:i', $v['iUpdateTime']) ?></td>
-                <td class="text-center">
-                    <a class="news_publish news_check_id_<?php echo $v['iNewsID'] ?>"
-                       href="<?php echo $v['iPublishStatus'] ? $sOffUrl : $sPublishUrl ?>?id=<?php echo $v['iNewsID'] ?>"
-                       data-type="<?php echo $v['iPublishStatus'] ?>"
-                       title="<?php echo $v['iPublishStatus'] ? '下架' : '上架' ?>">
-                        <img class="cric-icon"
-                             src="<?php echo $sStaticRoot . '/img/icon/' . ($v['iPublishStatus'] ? 'iconfont-zanting.png' : 'iconfont-tuiguangzhong.png') ?>">
-                    </a>
-                    <a href="<?= $sEditUrl ?>?id=<?php echo $v['iNewsID'] ?>" title="编辑"><i
-                            class="icon-pencil icon-large"></i></a>
-                    <a class="news_delete" href="<?= $sDelUrl ?>?id=<?php echo $v['iNewsID'] ?>" role="button"
-                       data-toggle="modal" title="删除"><i class="icon-trash icon-large"></i></a>
-                    <a class="cp-btn" data-url="<?php echo $v['iPublishStatus'] ? 'http://'.Yaf_G::getConf('news', 'domain').Util_Page::getUrl('/{city}/news/detail/{iNewsID}', ['city' => $aCurrentCity['sFullPinyin'], 'iNewsID' => $v['iNewsID']]) : '';?>" href="javascript:void(0)"
-                       title="复制地址"><i
-                            class="icon-copy icon-large"></i></a>
-                </td>
-            </tr>
-        <?php } ?>
-        </tbody>
-    </table>
-    <?php echo $aList['aPager'] ?>
+</form>
+<hr>
+<div class="btn-toolbar list-toolbar list-caozuo">
+    <button class="btn btn-primary" id="news_add">
+        <i class="icon-plus"></i> 增加资讯
+    </button>
+    <button class="btn btn-primary" id="news_batch_publish">
+        <i class="icon-play"></i> 批量发布
+    </button>
+    <button class="btn btn-primary" id="news_batch_off">
+        <i class="icon-stop"></i> 批量下架
+    </button>
+    <button class="btn btn-primary" id="news_batch_delete">
+        <i class="icon-remove"></i> 批量删除
+    </button>
+    <div style="float:right">
+        <label> 排序方式：</label>
+        <select class="input-sm" id="sOrder">
+            <option value="iPublishTime DESC">按发布时间倒序</option>
+            <option
+                value="iPublishTime ASC" <?php echo isset($aParam['sOrder']) && 'iPublishTime ASC' == $aParam['sOrder'] ? 'selected' : '' ?>>
+                按发布时间正序
+            </option>
+            <option
+                value="iUpdateTime ASC" <?php echo isset($aParam['sOrder']) && 'iUpdateTime ASC' == $aParam['sOrder'] ? 'selected' : '' ?>>
+                按编辑时间正序
+            </option>
+            <option
+                value="iUpdateTime DESC" <?php echo isset($aParam['sOrder']) && 'iUpdateTime DESC' == $aParam['sOrder'] ? 'selected' : '' ?>>
+                按编辑时间倒序
+            </option>
+        </select>
+    </div>
 </div>
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="text-center">
+            <input type="checkbox" id="news_all_check" name="news_all_check" value="">
+        </th>
+        <th class="col-sm-1 text-center">ID</th>
+        <th>标题</th>
+        <th class="text-center">分类</th>
+        <th class="text-center">作者</th>
+        <th class="text-center">发布状态</th>
+        <th class="text-center">发布时间</th>
+        <th class="text-center">最后编辑时间</th>
+        <th class="text-center">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($aList['aList'] as $v) { ?>
+        <tr id="tr_<?php echo $v['iNewsID'] ?>">
+            <td class="text-center">
+                <input type="checkbox" name="news_check_id" id="news_check_id_<?php echo $v['iNewsID'] ?>"
+                       value="<?php echo $v['iNewsID'] ?>">
+            </td>
+            <td class="col-sm-1 text-center"><?php echo $v['iNewsID'] ?></td>
+            <?php
+            if (isset($aCityCode[$v['iCityID']])) {
+                $sNewCityCode = $aCityCode[$v['iCityID']];
+            } else {
+                $sNewCityCode = $aCurrCity['sFullPinyin'];
+            }
+            ?>
+            <td><?php if ($v['iPublishStatus']) { ?><a target="_blank"
+                                                       href="<?php echo 'http://' . Yaf_G::getConf('news', 'domain') . '/' . $sNewCityCode . '/news/detail/' . $v['iNewsID']; ?>"><?php echo $v['sTitle'] ?></a><?php } else {
+                    echo $v['sTitle'];
+                } ?>
+            </td>
+            <td class="text-center"><?php echo @$aCategory[$v['iCategoryID']] ?></td>
+            <td class="text-center"><?php echo $v['sAuthor'] ?></td>
+            <td class="text-center"
+                id="status_<?php echo $v['iNewsID'] ?>"><?php echo $v['iPublishStatus'] ? '已发布' : '未发布' ?></td>
+            <td class="text-center"><?php echo date('Y-m-d H:i', $v['iPublishTime']) ?></td>
+            <td class="text-center"><?php echo date('Y-m-d H:i', $v['iUpdateTime']) ?></td>
+            <td class="text-center">
+                <a class="news_publish news_check_id_<?php echo $v['iNewsID'] ?>"
+                   href="<?php echo $v['iPublishStatus'] ? $sOffUrl : $sPublishUrl ?>?id=<?php echo $v['iNewsID'] ?>"
+                   data-type="<?php echo $v['iPublishStatus'] ?>"
+                   title="<?php echo $v['iPublishStatus'] ? '下架' : '上架' ?>">
+                    <img class="cric-icon"
+                         src="<?php echo $sStaticRoot . '/img/icon/' . ($v['iPublishStatus'] ? 'iconfont-zanting.png' : 'iconfont-tuiguangzhong.png') ?>">
+                </a>
+                <a href="<?= $sEditUrl ?>?id=<?php echo $v['iNewsID'] ?>" title="编辑"><i
+                        class="icon-pencil icon-large"></i></a>
+                <a class="news_delete" href="<?= $sDelUrl ?>?id=<?php echo $v['iNewsID'] ?>" role="button"
+                   data-toggle="modal" title="删除"><i class="icon-trash icon-large"></i></a>
+                <a class="cp-btn"
+                   data-url="<?php echo $v['iPublishStatus'] ? 'http://' . Yaf_G::getConf('news', 'domain') . Util_Page::getUrl('/{city}/news/detail/{iNewsID}', ['city' => $aCurrentCity['sFullPinyin'], 'iNewsID' => $v['iNewsID']]) : ''; ?>"
+                   href="javascript:void(0)"
+                   title="复制地址"><i
+                        class="icon-copy icon-large"></i></a>
+            </td>
+        </tr>
+    <?php } ?>
+    </tbody>
+</table>
+<?php echo $aList['aPager'] ?>
 <script type="text/javascript" charset="utf-8" src="<?php echo $sStaticRoot ?>/laydate/laydate.js"></script>
 <script>
     var sCityCode = "";
@@ -338,8 +392,6 @@
         });
     })
 
-    var iTypeID = <?php echo $iTypeID ?>;
-    var iCityID = <?php echo $iCityID ?>;
     //复制到地址到剪切板
     $(".cp-btn").click(function () {
         var url = $(this).data('url');
@@ -357,10 +409,31 @@
         }
 
     })
+
+    var start = {
+        elem: '#iSTime',
+        format: 'YYYY-MM-DD hh:mm:ss',
+        min: '2000-01-01 00:00:00', //设定最小日期为当前日期
+        max: '2099-06-16 23:59:59', //最大日期
+        istime: true,
+        istoday: false,
+        choose: function(datas){
+            end.min = datas; //开始日选好后，重置结束日的最小日期
+            end.start = datas //将结束日的初始值设定为开始日
+        }
+    };
+    var end = {
+        elem: '#iETime',
+        format: 'YYYY-MM-DD hh:mm:ss',
+        min: '2000-01-01 00:00:00',
+        max: laydate.now(),
+        istime: true,
+        istoday: false,
+        choose: function(datas){
+            start.max = datas; //结束日选好后，重置开始日的最大日期
+        }
+    };
+    laydate(start);
+    laydate(end);
 </script>
-<link rel="stylesheet" href="<?php echo $sStaticRoot ?>/jquery-ui/1.11.1/jquery-ui.min.css" type="text/css"/>
-<script type="text/javascript" charset="utf-8"
-        src="<?php echo $sStaticRoot ?>/jquery-ui/1.11.1/jquery-ui.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="<?php echo $sStaticRoot ?>/js/unit.js"></script>
-<script type="text/javascript" charset="utf-8" src="<?php echo $sStaticRoot ?>/js/author.js"></script>
-<script type="text/javascript" charset="utf-8" src="<?php echo $sStaticRoot ?>/js/tag.js"></script>
+

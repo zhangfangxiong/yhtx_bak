@@ -45,8 +45,6 @@
             me.createTable(title.checked, titleCol.checked, caption.checked);
             me.setAutoSize();
             me.setColor(me.getColor());
-            me.setWidth();
-            me.setAlign();
 
             domUtils.on(title, "click", me.titleHanler);
             domUtils.on(titleCol, "click", me.titleColHanler);
@@ -180,32 +178,6 @@
                 });
             }
         },
-        setWidth:function () {
-        	var rng = editor.selection.getRange(),
-	            table = domUtils.findParentByTagName(rng.startContainer, 'table');
-	        if (table) {
-	        	$G('J_tblwidth').value = table.style.width;
-	        }
-        },
-        setAlign:function () {
-        	var rng = editor.selection.getRange(),
-            	table = domUtils.findParentByTagName(rng.startContainer, 'table');
-	        if (table) {
-	        	var align = 'left';
-	        	if (table.style.margin == '0px auto') {
-	        		align = 'center';
-	        	}
-	        	var talign = $G('J_tblalign');
-	        	for (var i = 0; i < talign.options.length; i++)
-	            {
-	            	if (talign.options[i].value == align) {
-	            		talign.options[i].selected = true;
-	            	} else {
-	            		talign.options[i].selected = false;
-	            	}
-	            }
-	        }
-        },
         getColor:function () {
             var start = editor.selection.getStart(), color,
                 cell = domUtils.findParentByTagName(start, ["td", "th", "caption"], true);
@@ -255,11 +227,7 @@
             }
         }
 
-        editor.execCommand("edittable",
-        		tone.value, 
-        		parseInt($G("J_tblwidth").value, 10) + 'px',
-        		$G("J_tblalign").value
-        );
+        editor.execCommand("edittable", tone.value);
         autoSizeContent.checked ?editor.execCommand('adaptbytext') : "";
         autoSizePage.checked ? editor.execCommand("adaptbywindow") : "";
         editor.fireEvent('saveScene');
