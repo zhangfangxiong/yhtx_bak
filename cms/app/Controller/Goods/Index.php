@@ -256,6 +256,7 @@ class Controller_Goods_Index extends Controller_Base
                 return $this->showMsg('资讯信息' . $sAction . '失败！', false);
             }
         } else {
+            echo 1111;die;
             $this->_response->setHeader('Access-Control-Allow-Origin', '*.*');
             $aCategory = Model_Category::getPairCategorys($this->_getTypeCategory());
             $aTag = $this->_getTagList();//Model_Tag::getPairTags($this->_getTypeTag());
