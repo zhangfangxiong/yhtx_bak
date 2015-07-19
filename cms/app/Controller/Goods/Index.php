@@ -3,7 +3,7 @@
 class Controller_Goods_Index extends Controller_Base
 {
     /**
-     * 产品列表
+     * 商品列表
      */
     public function indexAction()
     {
@@ -37,10 +37,51 @@ class Controller_Goods_Index extends Controller_Base
         $aParam['iETime'] = strtotime($aParam['iETime']);
         $this->assign('aParam', $aParam);
         $this->assign('aList', $aList);
-        $aData = Model_Category::getMenu();
-        $this->assign('aTree',$aData);
+        $aTree = Model_Category::getMenu();
+        $this->assign('aTree',$aTree);
         $this->assign('aUnlockType',$this->aUnlockType);
         $this->assign('aUnlockLevel',$this->aUnlockLevel);
+    }
+
+    /**
+     * 增加商品
+     *
+     * @return boolean
+     */
+    public function addAction()
+    {
+        if ($this->isPost()) {
+            $aNews = $this->_checkData();
+            if (empty($aNews)) {
+                return null;
+            }
+            $sAction = '保存';
+            if ($this->getParam('iOptype') > 0) {
+                $aNews['iPublishStatus'] = 1;//发布需要将该字段改为1
+                $sAction = '发布';
+            }
+            //增加需要加上当前添加人ID
+            $aCurrUserInfo = $this->aCurrUser;
+            $aNews['iUpdateUserID'] = $aCurrUserInfo['iUserID'];
+            $aNews['iCreateUserID'] = $aCurrUserInfo['iUserID'];
+            $iNewsID = Model_News::addData($aNews);
+
+            if ($iNewsID > 0) {
+                return $this->showMsg(['sMsg' => '资讯信息' . $sAction . '成功！', 'iNewsID' => $iNewsID], true);
+            } else {
+                return $this->showMsg('资讯信息' . $sAction . '失败！', false);
+            }
+        } else {
+            $this->_response->setHeader('Access-Control-Allow-Origin', '*.*');
+            $aTree = Model_Category::getMenu();
+            $this->assign('aTree',$aTree);
+            $this->assign('aUnlockType',$this->aUnlockType);
+            $this->assign('aUnlockLevel',$this->aUnlockLevel);
+
+
+            $this->assign('sUploadUrl', Yaf_G::getConf('upload', 'url'));
+            $this->assign('sFileBaseUrl', 'http://' . Yaf_G::getConf('file', 'domain'));
+        }
     }
 
     /**
@@ -222,48 +263,6 @@ class Controller_Goods_Index extends Controller_Base
             $this->assign('aCategory', $aCategory);
             $this->assign('aTag', $aTag);
             $this->assign('aLoupan', $aLoupan);
-            $this->assign('sUploadUrl', Yaf_G::getConf('upload', 'url'));
-            $this->assign('sFileBaseUrl', 'http://' . Yaf_G::getConf('file', 'domain'));
-        }
-    }
-
-    /**
-     * 增加资讯
-     *
-     * @return boolean
-     */
-    public function addAction()
-    {
-        if ($this->isPost()) {
-            $aNews = $this->_checkData();
-            if (empty($aNews)) {
-                return null;
-            }
-            $sAction = '保存';
-            if ($this->getParam('iOptype') > 0) {
-                $aNews['iPublishStatus'] = 1;//发布需要将该字段改为1
-                $sAction = '发布';
-            }
-            //增加需要加上当前添加人ID
-            $aCurrUserInfo = $this->aCurrUser;
-            $aNews['iUpdateUserID'] = $aCurrUserInfo['iUserID'];
-            $aNews['iCreateUserID'] = $aCurrUserInfo['iUserID'];
-            $iNewsID = Model_News::addData($aNews);
-
-            if ($iNewsID > 0) {
-                return $this->showMsg(['sMsg' => '资讯信息' . $sAction . '成功！', 'iNewsID' => $iNewsID], true);
-            } else {
-                return $this->showMsg('资讯信息' . $sAction . '失败！', false);
-            }
-        } else {
-            echo 1111;die;
-            $this->_response->setHeader('Access-Control-Allow-Origin', '*.*');
-            $aCategory = Model_Category::getPairCategorys($this->_getTypeCategory());
-            $aTag = $this->_getTagList();//Model_Tag::getPairTags($this->_getTypeTag());
-            $this->assign('iTypeID', $this->_getTypeID());
-            $this->assign('iCityID', $this->_getCityID());
-            $this->assign('aCategory', $aCategory);
-            $this->assign('aTag', $aTag);
             $this->assign('sUploadUrl', Yaf_G::getConf('upload', 'url'));
             $this->assign('sFileBaseUrl', 'http://' . Yaf_G::getConf('file', 'domain'));
         }

@@ -78,14 +78,14 @@
         <div class="form-group">
             <label class="control-label">分类：</label>
             <select name="iCatID" class="form-control input-validate">
-                <option value="0">请选择</option>
+                <option value="-1">请选择</option>
                 <?php
                 if (!empty($aTree)) {
-                    $iMenuID = isset($aMenu['iParentID']) ? $aMenu['iParentID'] : '';
+                    $iMenuID = isset($aMenu['iCatID']) ? $aMenu['iCatID'] : '';
                     foreach ($aTree as $v) {
                         ?>
                         <option
-                            value="<?php echo $v['iID'] ?>"><?php echo ($v['iLevel'] > 0 ? '└' . str_repeat('─', $v['iLevel'] * 2) : '') . $v['sName'] ?></option>
+                            value="<?php echo $v['iID'] ?>" <?php echo $v['iID'] == $iMenuID ? 'selected' : '';?>><?php echo ($v['iLevel'] > 0 ? '└' . str_repeat('─', $v['iLevel'] * 2) : '') . $v['sName'] ?></option>
                     <?php }
                 } ?>
             </select>
@@ -130,6 +130,35 @@
                     value="0" <?php echo isset($aParam['iPublishStatus']) && 0 == $aParam['iPublishStatus'] ? 'selected' : '' ?>>
                     未发布
                 </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">解锁类型：</label>
+            <select class="form-control input-sm" name="iUnlockType">
+                <option value="-1">请选择</option>
+                <option
+                    value="1" <?php echo isset($aParam['iUnlockType']) && 1 == $aParam['iUnlockType'] ? 'selected' : '' ?>>
+                    <?php echo $aUnlockType[1]?>
+                </option>
+                <option
+                    value="0" <?php echo isset($aParam['iUnlockType']) && 0 == $aParam['iUnlockType'] ? 'selected' : '' ?>>
+                    <?php echo $aUnlockType[0]?>
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">解锁级别：</label>
+            <select name="iUnlockLevel" class="form-control input-validate">
+                <option value="-1">请选择</option>
+                <?php
+                if (!empty($aUnlockLevel)) {
+                    $iUnlockLevel = isset($aParam['iUnlockLevel']) ? $aParam['iUnlockLevel'] : '';
+                    foreach ($aUnlockLevel as $v) {
+                        ?>
+                        <option
+                            value="<?php echo $v ?>" <?php echo $v == $iUnlockLevel ? 'selected' : '';?>><?php echo $v ?>级</option>
+                    <?php }
+                } ?>
             </select>
         </div>
         <div class="form-group">
