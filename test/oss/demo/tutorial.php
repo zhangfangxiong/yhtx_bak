@@ -5,13 +5,12 @@
 require_once '../sdk.class.php';
 
 $oss_sdk_service = new ALIOSS();
-print_r($oss_sdk_service);die;
 
 //设置是否打开curl调试模式
-$oss_sdk_service->set_debug_mode(FALSE);
+$oss_sdk_service->set_debug_mode(false);
 
 //设置开启三级域名，三级域名需要注意，域名不支持一些特殊符号，所以在创建bucket的时候若想使用三级域名，最好不要使用特殊字符
-//$oss_sdk_service->set_enable_domain_style(TRUE);
+$oss_sdk_service->set_enable_domain_style(DOMAIN_THREE);
 
 /**
  * 测试程序
@@ -90,7 +89,7 @@ function get_service($obj){
 
 //创建bucket
 function create_bucket($obj){
-	$bucket = 'invalidxml3';
+	$bucket = OSS_BUCKET;
 	//$acl = ALIOSS::OSS_ACL_TYPE_PRIVATE;
 	$acl = ALIOSS::OSS_ACL_TYPE_PUBLIC_READ;
 	//$acl = ALIOSS::OSS_ACL_TYPE_PUBLIC_READ_WRITE;
@@ -101,7 +100,7 @@ function create_bucket($obj){
 
 //删除bucket
 function delete_bucket($obj){
-	$bucket = 'phpsdk1349849369';
+	$bucket = OSS_BUCKET;
 	
 	$response = $obj->delete_bucket($bucket);
 	_format($response);
@@ -109,7 +108,7 @@ function delete_bucket($obj){
 
 //设置bucket ACL
 function set_bucket_acl($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	//$acl = ALIOSS::OSS_ACL_TYPE_PRIVATE;
 	//$acl = ALIOSS::OSS_ACL_TYPE_PUBLIC_READ;
 	$acl = ALIOSS::OSS_ACL_TYPE_PUBLIC_READ_WRITE;
@@ -120,7 +119,7 @@ function set_bucket_acl($obj){
 
 //获取bucket ACL
 function get_bucket_acl($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	$options = array(
 		ALIOSS::OSS_CONTENT_TYPE => 'text/xml',
 	);
@@ -131,7 +130,7 @@ function get_bucket_acl($obj){
 
 //设置bucket logging
 function  set_bucket_logging($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	$target_bucket='backet2';
 	$target_prefix='test';
 	
@@ -141,7 +140,7 @@ function  set_bucket_logging($obj){
 
 //获取bucket logging
 function  get_bucket_logging($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	
 	$response = $obj->get_bucket_logging($bucket);
 	_format($response);	
@@ -149,7 +148,7 @@ function  get_bucket_logging($obj){
 
 //删除bucket logging
 function  delete_bucket_logging($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	
 	$response = $obj->delete_bucket_logging($bucket);
 	_format($response);	
@@ -157,7 +156,7 @@ function  delete_bucket_logging($obj){
 
 //设置bucket website
 function  set_bucket_website($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	$index_document='index.html';
     $error_document='error.html';
 	
@@ -167,7 +166,7 @@ function  set_bucket_website($obj){
 
 //获取bucket website
 function  get_bucket_website($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	
 	$response = $obj->get_bucket_website($bucket);
 	_format($response);	
@@ -175,7 +174,7 @@ function  get_bucket_website($obj){
 
 //删除bucket website
 function  delete_bucket_website($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	
 	$response = $obj->delete_bucket_website($bucket);
 	_format($response);	
@@ -186,7 +185,7 @@ function  delete_bucket_website($obj){
 
 //设置bucket cors
 function  set_bucket_cors($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	
 	$cors_rule[ALIOSS::OSS_CORS_ALLOWED_HEADER]=array("x-oss-test");
 	$cors_rule[ALIOSS::OSS_CORS_ALLOWED_METHOD]=array("GET");
@@ -201,7 +200,7 @@ function  set_bucket_cors($obj){
 
 //获取bucket cors
 function  get_bucket_cors($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	
 	$response = $obj->get_bucket_cors($bucket);
 	_format($response);	
@@ -209,7 +208,7 @@ function  get_bucket_cors($obj){
 
 //删除bucket cors
 function  delete_bucket_cors($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	
 	$response = $obj->delete_bucket_cors($bucket);
 	_format($response);	
@@ -217,7 +216,7 @@ function  delete_bucket_cors($obj){
 
 //options object
 function  options_object($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	$object='1.jpg';
 	$origin='http://www.b.com';
 	$request_method='GET';
@@ -232,7 +231,7 @@ function  options_object($obj){
 
 //获取object列表
 function list_object($obj){
-	$bucket = 'efrwerwertyrty';
+	$bucket = OSS_BUCKET;
 	$options = array(
 		'delimiter' => '/',
 		'prefix' => '',
@@ -246,7 +245,7 @@ function list_object($obj){
 
 //创建目录
 function create_directory($obj){
-	$bucket = 'efrwerwertyrty';
+	$bucket = OSS_BUCKET;
 	//$dir = '"><img src=\"#\" onerror=alert(\/';
 	$dir = 'myfoll////';
 	
@@ -256,8 +255,8 @@ function create_directory($obj){
 
 //通过内容上传文件
 function upload_by_content($obj){
-	$bucket = 'invalidxml3';
-	$folder = 'bbb/';
+	$bucket = OSS_BUCKET;
+	$folder = OSS_UPLOAD_PATH;
 	
 	for($index = 100;$index < 201;$index++){	
 		
@@ -286,7 +285,7 @@ function upload_by_content($obj){
 
 //通过路径上传文件
 function upload_by_file($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	$object = 'netbeans-7.1.2-ml-cpp-linux.sh';	
 	$file_path = "D:\\TDDOWNLOAD\\netbeans-7.1.2-ml-cpp-linux.sh";
 	
@@ -297,9 +296,9 @@ function upload_by_file($obj){
 //拷贝object
 function copy_object($obj){
 		//copy object
-		$from_bucket = 'invalidxml';
+		$from_bucket = OSS_BUCKET;
 		$from_object = '&#26;&#26;_100.txt';
-		$to_bucket = 'invalidxml';
+		$to_bucket = OSS_BUCKET;
 		$to_object = '&#26;&#26;_100.txt';
 		$options = array(
 			'content-type' => 'application/json',
@@ -311,7 +310,7 @@ function copy_object($obj){
 
 //获取object meta
 function get_object_meta($obj){
-	$bucket = 'invalidxml';
+	$bucket = OSS_BUCKET;
 	$object = '&#26;&#26;_100.txt'; 
 
 	$response = $obj->get_object_meta($bucket,$object);
@@ -320,7 +319,7 @@ function get_object_meta($obj){
 
 //删除object
 function delete_object($obj){
-	$bucket = 'invalidxml';
+	$bucket = OSS_BUCKET;
 	$object = '&#26;&#26;_100.txt'; 
 	$response = $obj->delete_object($bucket,$object);
 	_format($response);
@@ -328,7 +327,7 @@ function delete_object($obj){
 
 //删除objects
 function delete_objects($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	$objects = array('myfoloder-1349850940/','myfoloder-1349850941/',);   
 	
 	$options = array(
@@ -342,7 +341,7 @@ function delete_objects($obj){
 
 //获取object
 function get_object($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	$object = 'netbeans-7.1.2-ml-cpp-linux.sh'; 
 	
 	$options = array(
@@ -356,7 +355,7 @@ function get_object($obj){
 
 //检测object是否存在
 function is_object_exist($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	$object = 'netbeans-7.1.2-ml-cpp-linux.sh';  
 							
 	$response = $obj->is_object_exist($bucket,$object);
@@ -365,7 +364,7 @@ function is_object_exist($obj){
 
 //通过multipart上传文件
 function upload_by_multi_part($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	$object = 'Mining.the.Social.Web-'.time().'.pdf';  //英文
 	$filepath = "D:\\Book\\Mining.the.Social.Web.pdf";  //英文
 		
@@ -380,7 +379,7 @@ function upload_by_multi_part($obj){
 
 //通过multipart上传整个目录
 function upload_by_dir($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	$dir = "D:\\alidata\\www\\logs\\aliyun.com\\oss\\";
 	$recursive = false;
 	
@@ -391,7 +390,7 @@ function upload_by_dir($obj){
 //通过multi-part上传整个目录(新版)
 function batch_upload_file($obj){
 	$options = array(
-		'bucket' 	=> 'phpsdk1349849394',
+		'bucket' 	=> OSS_BUCKET,
 		'object'	=> 'picture',
 		'directory' => 'D:\alidata\www\logs\aliyun.com\oss',
 	);
@@ -405,7 +404,7 @@ function batch_upload_file($obj){
 
 //生成签名url,主要用户私有权限下的访问控制
 function get_sign_url($obj){
-	$bucket = 'phpsdk1349849394';
+	$bucket = OSS_BUCKET;
 	$object = 'netbeans-7.1.2-ml-cpp-linux.sh';
 	$timeout = 3600;
 

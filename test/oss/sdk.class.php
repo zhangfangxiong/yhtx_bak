@@ -30,7 +30,7 @@ if(file_exists(OSS_API_PATH.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.ALI_L
 define('OSS_NAME','oss-sdk-php');
 define('OSS_VERSION','1.1.6');
 define('OSS_BUILD','201210121010245');
-define('OSS_AUTHOR', 'xiaobing.meng@alibaba-inc.com');
+define('OSS_AUTHOR', 'zfx');
 
 // EXCEPTIONS
 
@@ -69,7 +69,7 @@ class ALIOSS{
 	/**
 	 * OSS服务地址
 	 */
-	const DEFAULT_OSS_HOST = 'oss.aliyuncs.com';
+	const DEFAULT_OSS_HOST = IMG_REQUEST_URL;
 	//const DEFAULT_OSS_HOST = '10.230.201.90';
 	/**
 	 * 软件名称
