@@ -10,7 +10,7 @@ define('OSS_ACCESS_KEY', 'ozpAJgQRfCNf7IsyT0MPvJudcv5PAV');
 define('IMG_REQUEST_URL','oss-cn-shenzhen.aliyuncs.com');
 
 //使用的bucket
-define('OSS_BUCKET','yhtx-image');
+define('OSS_BUCKET','yhtx-images');
 
 //upload目录
 define('OSS_UPLOAD_PATH','upload/');

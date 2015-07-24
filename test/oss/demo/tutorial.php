@@ -49,7 +49,7 @@ try{
 	/**
 	 * Object相关操作
 	 */
-	list_object($oss_sdk_service);
+	//list_object($oss_sdk_service);
 	//create_directory($oss_sdk_service);
     //upload_by_content($oss_sdk_service);
    	//upload_by_file($oss_sdk_service);
@@ -58,7 +58,7 @@ try{
 	//delete_object($oss_sdk_service);    
 	//delete_objects($oss_sdk_service);   
 	//get_object($oss_sdk_service);       
-	//is_object_exist($oss_sdk_service);   
+	is_object_exist($oss_sdk_service);
 	//upload_by_multi_part($oss_sdk_service); 
 	//upload_by_dir($oss_sdk_service); 
 	//batch_upload_file($oss_sdk_service);
@@ -342,7 +342,7 @@ function delete_objects($obj){
 //获取object
 function get_object($obj){
 	$bucket = OSS_BUCKET;
-	$object = 'netbeans-7.1.2-ml-cpp-linux.sh'; 
+	$object = OSS_UPLOAD_PATH;
 	
 	$options = array(
 		ALIOSS::OSS_FILE_DOWNLOAD => "d:\\cccccccccc.sh",
@@ -356,7 +356,7 @@ function get_object($obj){
 //检测object是否存在
 function is_object_exist($obj){
 	$bucket = OSS_BUCKET;
-	$object = 'netbeans-7.1.2-ml-cpp-linux.sh';  
+	$object = OSS_UPLOAD_PATH.'1e6fc431.jpg';
 							
 	$response = $obj->is_object_exist($bucket,$object);
 	_format($response);
