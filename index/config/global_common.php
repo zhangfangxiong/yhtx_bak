@@ -13,7 +13,7 @@ $config['domain']['touchweb']       = 'm.' . ENV_DOMAIN;
 $config['domain']['fangjiadp']  = 'www.fangjiadp.com';
 $config['domain']['mfangjiadp']  = 'm.fangjiadp.com';
 */
-
+$config['domain']['image'] = 'image.'.ENV_DOMAIN;
 $config['domain']['static']     = ENV_DOMAIN . '/static';
 $config['domain']['www']     = ENV_DOMAIN;
 
@@ -24,8 +24,8 @@ $config['switchVersion']['allowip'] = array(
 );
 
 //URL配置
-$config['url']['upload'] = 'http://' . $config['domain']['file'] . '/file/upload';
-$config['url']['dfsview'] = 'http://' . $config['domain']['file'] . '/view';
+$config['url']['upload'] = 'http://' . $config['domain']['www'] . '/file/upload';
+$config['url']['dfsview'] = 'http://' . $config['domain']['image'];
 
 $config['url']['bannerupload'] = 'http://' . $config['domain']['file'] . '/file/bannerupload';
 

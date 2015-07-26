@@ -49,7 +49,7 @@ try{
 	/**
 	 * Object相关操作
 	 */
-	//list_object($oss_sdk_service);
+	list_object($oss_sdk_service);
 	//create_directory($oss_sdk_service);
     //upload_by_content($oss_sdk_service);
    	//upload_by_file($oss_sdk_service);
@@ -58,7 +58,7 @@ try{
 	//delete_object($oss_sdk_service);    
 	//delete_objects($oss_sdk_service);   
 	//get_object($oss_sdk_service);       
-	is_object_exist($oss_sdk_service);
+	//is_object_exist($oss_sdk_service);
 	//upload_by_multi_part($oss_sdk_service); 
 	//upload_by_dir($oss_sdk_service); 
 	//batch_upload_file($oss_sdk_service);

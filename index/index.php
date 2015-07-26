@@ -2,7 +2,7 @@
 $sIndexPath = dirname(__FILE__);//等于5.3中的__dir__
 $sHost = $_SERVER['HTTP_HOST'];
 $aHost = explode('.', $sHost);
-//define('ENV_CHANNEL', array_shift($aHost));//这里是设置了二级域名的，在这里可以设置为文件夹名
+define('ENV_CHANNEL', array_shift($aHost));//这里是设置了二级域名的，在这里可以设置为文件夹名
 define("ROOT_PATH", '/home/wwwroot/default');//root目录
 define("APP_PATH", ROOT_PATH.'/cms/app');//项目目录
 define("LIB_PATH", ROOT_PATH.'/library');//基类目录

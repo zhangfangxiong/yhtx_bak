@@ -30,7 +30,7 @@ if(file_exists(OSS_API_PATH.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.ALI_L
 define('OSS_NAME','oss-sdk-php');
 define('OSS_VERSION','1.1.6');
 define('OSS_BUILD','201210121010245');
-define('OSS_AUTHOR', 'xiaobing.meng@alibaba-inc.com');
+define('OSS_AUTHOR', 'zfx');
 
 // EXCEPTIONS
 
@@ -69,7 +69,7 @@ class ALIOSS{
 	/**
 	 * OSS服务地址
 	 */
-	const DEFAULT_OSS_HOST = 'oss.aliyuncs.com';
+	const DEFAULT_OSS_HOST = IMG_REQUEST_URL;
 	//const DEFAULT_OSS_HOST = '10.230.201.90';
 	/**
 	 * 软件名称
@@ -434,8 +434,8 @@ class ALIOSS{
 		$signable_resource = '';
 		$query_string_params = array();
 		$signable_query_string_params = array();
-		$string_to_sign = '';		
-		
+		$string_to_sign = '';
+
 		$headers = array (
 			self::OSS_CONTENT_MD5 => '',
 			self::OSS_CONTENT_TYPE => isset($options[self::OSS_CONTENT_TYPE])?$options[self::OSS_CONTENT_TYPE]:'application/x-www-form-urlencoded',
@@ -1304,13 +1304,14 @@ class ALIOSS{
 		$extension = explode ( '.', $file );
 		$extension = array_pop ( $extension );
 		$content_type = MimeTypes::get_mimetype(strtolower($extension));
-				
+
 		$options[self::OSS_METHOD] = self::OSS_HTTP_PUT;
 		$options[self::OSS_BUCKET] = $bucket;
 		$options[self::OSS_OBJECT] = $object;
-		$options[self::OSS_CONTENT_TYPE] = $content_type;
 		$options[self::OSS_CONTENT_LENGTH] = $filesize;
-				
+		if (!isset($options[self::OSS_CONTENT_TYPE])) {
+			$options[self::OSS_CONTENT_TYPE] = $content_type;
+		}
 		$response = $this->auth($options);
 		return $response;
 	}
