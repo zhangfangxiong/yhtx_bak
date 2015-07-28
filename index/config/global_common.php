@@ -14,8 +14,8 @@ $config['domain']['fangjiadp']  = 'www.fangjiadp.com';
 $config['domain']['mfangjiadp']  = 'm.fangjiadp.com';
 */
 $config['domain']['image'] = 'image.'.ENV_DOMAIN;
-$config['domain']['static']     = ENV_DOMAIN . '/static';
-$config['domain']['www']     = ENV_DOMAIN;
+$config['domain']['static']     = ENV_HOST . '/static';
+$config['domain']['www']     = ENV_HOST;
 
 $config['switchVersion']['allowip'] = array(
     '101.231.183.230',
