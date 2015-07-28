@@ -55,7 +55,7 @@ class Uploader
         $this->type = $type;
         if ($type == "remote") {
             $this->saveRemote();
-        } else if($type == "base64") {
+        } else if ($type == "base64") {
             $this->upBase64();
         } else {
             $this->upFile();
@@ -68,7 +68,77 @@ class Uploader
      * 上传文件的主处理方法
      * @return mixed
      */
+
     private function upFile()
+    {
+        $file = $this->file = $_FILES[$this->fileField];
+        if (!$file) {
+            $this->stateInfo = $this->getStateInfo("ERROR_FILE_NOT_FOUND");
+            return;
+        }
+        if ($this->file['error']) {
+            $this->stateInfo = $this->getStateInfo($file['error']);
+            return;
+        } else if (!file_exists($file['tmp_name'])) {
+            $this->stateInfo = $this->getStateInfo("ERROR_TMP_FILE_NOT_FOUND");
+            return;
+        } else if (!is_uploaded_file($file['tmp_name'])) {
+            $this->stateInfo = $this->getStateInfo("ERROR_TMPFILE");
+            return;
+        }
+        $this->oriName = $file['name'];
+        $this->fileSize = $file['size'];
+        $this->fileType = $this->getFileExt();
+        $this->fullName = $this->getFullName();
+        $this->filePath = $this->getFilePath();
+        $this->fileName = $this->getFileName();
+        $dirname = dirname($this->filePath);
+
+        //检查文件大小是否超出限制
+        if (!$this->checkSize()) {
+            $this->stateInfo = $this->getStateInfo("ERROR_SIZE_EXCEED");
+            return;
+        }
+
+        //检查是否不允许的文件格式
+        if (!$this->checkType()) {
+            $this->stateInfo = $this->getStateInfo("ERROR_TYPE_NOT_ALLOWED");
+            return;
+        }
+
+        /**
+         * //创建目录失败
+         * if (!file_exists($dirname) && !mkdir($dirname, 0777, true)) {
+         * $this->stateInfo = $this->getStateInfo("ERROR_CREATE_DIR");
+         * return;
+         * } else if (!is_writeable($dirname)) {
+         * $this->stateInfo = $this->getStateInfo("ERROR_DIR_NOT_WRITEABLE");
+         * return;
+         * }
+         */
+        include_once("oss.php");
+        $serverpath = $file["tmp_name"];
+        $osspath = "/" . $this->fullName;
+        $ossboj = new OSSobj();
+        $isok = $ossboj->upload_by_multi_part($serverpath, $osspath);
+        if ($isok) {
+            $this->stateInfo = $this->stateMap[0];
+        } else {
+            $this->stateInfo = $this->getStateInfo("ERROR_FILE_MOVE");
+        }
+        @unlink($file["tmp_name"]);
+
+        /**
+         * //移动文件
+         * if (!(move_uploaded_file($file["tmp_name"], $this->filePath) && file_exists($this->filePath))) { //移动失败
+         * $this->stateInfo = $this->getStateInfo("ERROR_FILE_MOVE");
+         * } else { //移动成功
+         * $this->stateInfo = $this->stateMap[0];
+         * }
+         */
+    }
+
+    private function upFile_bak()
     {
         $file = $this->file = $_FILES[$this->fileField];
         if (!$file) {
@@ -127,7 +197,7 @@ class Uploader
      * 处理base64编码的图片上传
      * @return mixed
      */
-    private function upBase64()
+    private function upBase64_bak()
     {
         $base64Data = $_POST[$this->fileField];
         $img = base64_decode($base64Data);
@@ -162,6 +232,60 @@ class Uploader
             $this->stateInfo = $this->stateMap[0];
         }
 
+    }
+
+    private function upBase64()
+    {
+        $base64Data = $_POST[$this->fileField];
+        $img = base64_decode($base64Data);
+
+        $this->oriName = $this->config['oriName'];
+        $this->fileSize = strlen($img);
+        $this->fileType = $this->getFileExt();
+        $this->fullName = $this->getFullName();
+        $this->filePath = $this->getFilePath();
+        $this->fileName = $this->getFileName();
+        $dirname = dirname($this->filePath);
+
+        //检查文件大小是否超出限制
+        if (!$this->checkSize()) {
+            $this->stateInfo = $this->getStateInfo("ERROR_SIZE_EXCEED");
+            return;
+        }
+
+        /**
+         * //创建目录失败
+         * if (!file_exists($dirname) && !mkdir($dirname, 0777, true)) {
+         * $this->stateInfo = $this->getStateInfo("ERROR_CREATE_DIR");
+         * return;
+         * } else if (!is_writeable($dirname)) {
+         * $this->stateInfo = $this->getStateInfo("ERROR_DIR_NOT_WRITEABLE");
+         * return;
+         * }
+         *
+         * //移动文件
+         * if (!(file_put_contents($this->filePath, $img) && file_exists($this->filePath))) { //移动失败
+         * $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
+         * } else { //移动成功
+         * $this->stateInfo = $this->stateMap[0];
+         * }
+         */
+
+        if (!(file_put_contents($this->filePath, $img) && file_exists($this->filePath))) { //移动失败
+            $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
+        } else { //移动成功
+            include_once("oss.php");
+            $serverpath = $this->filePath;
+            $osspath = "/" . $this->fullName;
+            $ossboj = new OSSobj();
+            $isok = $ossboj->upload_by_multi_part($serverpath, $osspath);
+            if ($isok) {
+                $this->stateInfo = $this->stateMap[0];
+            } else {
+                $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
+            }
+            @unlink($this->filePath);
+        }
     }
 
     /**
@@ -203,7 +327,92 @@ class Uploader
         ob_end_clean();
         preg_match("/[\/]([^\/]*)[\.]?[^\.\/]*$/", $imgUrl, $m);
 
-        $this->oriName = $m ? $m[1]:"";
+        $this->oriName = $m ? $m[1] : "";
+        $this->fileSize = strlen($img);
+        $this->fileType = $this->getFileExt();
+        $this->fullName = $this->getFullName();
+        $this->filePath = $this->getFilePath();
+        $this->fileName = $this->getFileName();
+        $dirname = dirname($this->filePath);
+
+        //检查文件大小是否超出限制
+        if (!$this->checkSize()) {
+            $this->stateInfo = $this->getStateInfo("ERROR_SIZE_EXCEED");
+            return;
+        }
+
+        /**
+         * //创建目录失败
+         * if (!file_exists($dirname) && !mkdir($dirname, 0777, true)) {
+         * $this->stateInfo = $this->getStateInfo("ERROR_CREATE_DIR");
+         * return;
+         * } else if (!is_writeable($dirname)) {
+         * $this->stateInfo = $this->getStateInfo("ERROR_DIR_NOT_WRITEABLE");
+         * return;
+         * }
+         *
+         * //移动文件
+         * if (!(file_put_contents($this->filePath, $img) && file_exists($this->filePath))) { //移动失败
+         * $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
+         * } else { //移动成功
+         * $this->stateInfo = $this->stateMap[0];
+         * }
+         */
+
+        if (!(file_put_contents($this->filePath, $img) && file_exists($this->filePath))) { //移动失败
+            $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
+        } else { //移动成功
+            include_once("oss.php");
+            $serverpath = $this->filePath;
+            $osspath = "/" . $this->fullName;
+            $ossboj = new OSSobj();
+            $isok = $ossboj->upload_by_multi_part($serverpath, $osspath);
+            if ($isok) {
+                $this->stateInfo = $this->stateMap[0];
+            } else {
+                $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
+            }
+            @unlink($this->filePath);
+        }
+
+    }
+
+    private function saveRemote_bak()
+    {
+        $imgUrl = htmlspecialchars($this->fileField);
+        $imgUrl = str_replace("&amp;", "&", $imgUrl);
+
+        //http开头验证
+        if (strpos($imgUrl, "http") !== 0) {
+            $this->stateInfo = $this->getStateInfo("ERROR_HTTP_LINK");
+            return;
+        }
+        //获取请求头并检测死链
+        $heads = get_headers($imgUrl);
+        if (!(stristr($heads[0], "200") && stristr($heads[0], "OK"))) {
+            $this->stateInfo = $this->getStateInfo("ERROR_DEAD_LINK");
+            return;
+        }
+        //格式验证(扩展名验证和Content-Type验证)
+        $fileType = strtolower(strrchr($imgUrl, '.'));
+        if (!in_array($fileType, $this->config['allowFiles']) || stristr($heads['Content-Type'], "image")) {
+            $this->stateInfo = $this->getStateInfo("ERROR_HTTP_CONTENTTYPE");
+            return;
+        }
+
+        //打开输出缓冲区并获取远程图片
+        ob_start();
+        $context = stream_context_create(
+            array('http' => array(
+                'follow_location' => false // don't follow redirects
+            ))
+        );
+        readfile($imgUrl, false, $context);
+        $img = ob_get_contents();
+        ob_end_clean();
+        preg_match("/[\/]([^\/]*)[\.]?[^\.\/]*$/", $imgUrl, $m);
+
+        $this->oriName = $m ? $m[1] : "";
         $this->fileSize = strlen($img);
         $this->fileType = $this->getFileExt();
         $this->fullName = $this->getFullName();
@@ -283,7 +492,6 @@ class Uploader
         if (preg_match("/\{rand\:([\d]*)\}/i", $format, $matches)) {
             $format = preg_replace("/\{rand\:[\d]*\}/i", substr($randNum, 0, $matches[1]), $format);
         }
-
         $ext = $this->getFileExt();
         return $format . $ext;
     }
@@ -292,7 +500,8 @@ class Uploader
      * 获取文件名
      * @return string
      */
-    private function getFileName () {
+    private function getFileName()
+    {
         return substr($this->filePath, strrpos($this->filePath, '/') + 1);
     }
 

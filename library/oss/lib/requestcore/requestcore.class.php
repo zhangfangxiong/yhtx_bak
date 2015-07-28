@@ -822,6 +822,9 @@ class RequestCore
 
 		if ($this->response === false)
 		{
+			//这里价格调试的
+			echo '上传错误<br>';
+			echo "cURL resource: ' . (string) $curl_handle . '; cURL error: ' . curl_error($curl_handle) . ' (' . curl_errno($curl_handle) . ')'";die;
 			throw new RequestCore_Exception('cURL resource: ' . (string) $curl_handle . '; cURL error: ' . curl_error($curl_handle) . ' (' . curl_errno($curl_handle) . ')');
 		}
 

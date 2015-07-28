@@ -416,7 +416,6 @@ class ALIOSS{
 				throw new OSS_Exception($options[self::OSS_HEADERS][self::OSS_ACL].':'.OSS_ACL_INVALID);
 			}
 		}
-
 				
 		//定义scheme
 		$scheme = $this->use_ssl ? 'https://' : 'http://';
@@ -496,7 +495,6 @@ class ALIOSS{
 		
 		//创建请求
 		$request = new RequestCore($this->request_url);
-		 
 		// Streaming uploads
 		if (isset($options[self::OSS_FILE_UPLOAD])){
 			if (is_resource($options[self::OSS_FILE_UPLOAD])){
@@ -609,9 +607,11 @@ class ALIOSS{
 			$request->debug_mode = $this->debug_mode;
 		}
 
+
 		$msg .= "REQUEST HEADERS:----------------------------------------------\n".serialize($request->request_headers)."\n";
-		
+
 		$request->send_request();
+
 
 		$response_header = $request->get_response_header();
 		$response_header['x-oss-request-url'] = $this->request_url;
@@ -622,7 +622,7 @@ class ALIOSS{
 		$msg .= "RESPONSE HEADERS:----------------------------------------------\n".serialize($response_header)."\n";
 		
 		$data =  new ResponseCore ( $response_header , $request->get_response_body (), $request->get_response_code () );
-	
+
 		if((integer)$request->get_response_code() === 400 /*Bad Request*/ || (integer)$request->get_response_code() === 500 /*Internal Error*/ || (integer)$request->get_response_code() === 503 /*Service Unavailable*/){	
 		   if($this->redirects <= $this->max_retries ){
 		   		//设置休眠
@@ -638,7 +638,7 @@ class ALIOSS{
 		//add log
 		$this->log($msg);
 		
-		$this->redirects = 0;	
+		$this->redirects = 0;
 		return $data;
 	}
 
@@ -1383,7 +1383,6 @@ class ALIOSS{
 		$options[self::OSS_BUCKET] = $bucket;
 		$options[self::OSS_METHOD] = self::OSS_HTTP_HEAD;
 		$options[self::OSS_OBJECT] = $object;
-
 		$response = $this->auth ( $options );
 
 		return $response;
@@ -1555,7 +1554,6 @@ class ALIOSS{
 		$options[self::OSS_OBJECT] = $object;
 
 		$response = $this->get_object_meta($bucket, $object,$options);
-
 		return $response;
 	}
 
