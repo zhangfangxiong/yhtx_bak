@@ -401,7 +401,7 @@ class ALIOSS{
 		if(isset($options[self::OSS_OBJECT]) && !$this->validate_object($options[self::OSS_OBJECT])){
 			throw  new OSS_Exception($options[self::OSS_OBJECT].OSS_OBJECT_NAME_INVALID);
 		}
-		
+
 		//Object编码为UTF-8
 		if($this->is_gb2312($options[self::OSS_OBJECT])){
 			$options[self::OSS_OBJECT] = iconv('GB2312', "UTF-8",$options[self::OSS_OBJECT]);
@@ -426,7 +426,6 @@ class ALIOSS{
 			$hostname = (isset($options[self::OSS_BUCKET]) && ''!==$options[self::OSS_BUCKET])?$this->hostname.'/'.$options[self::OSS_BUCKET]:$this->hostname;
 		}
 
-		
 		//请求参数
 		$resource = '';
 		$sub_resource = '';
@@ -456,7 +455,7 @@ class ALIOSS{
 			'partNumber',
 			'uploadId',			
 		);
-		
+
 		foreach ($signable_list as $item){
 			if(isset($options[$item])){
 				$signable_query_string_params[$item] = $options[$item]; 
@@ -569,7 +568,6 @@ class ALIOSS{
 		}
 
 		uksort($headers, 'strnatcasecmp');
-		
 		foreach ( $headers as $header_key => $header_value ) {
 			$header_value = str_replace ( array ("\r", "\n" ), '', $header_value );
 			if ($header_value !== '') {
@@ -609,7 +607,6 @@ class ALIOSS{
 
 
 		$msg .= "REQUEST HEADERS:----------------------------------------------\n".serialize($request->request_headers)."\n";
-
 		$request->send_request();
 
 
@@ -1542,17 +1539,14 @@ class ALIOSS{
 		if(!$options){
 			$options = array();
 		}
-
 		//bucket
 		$this->is_empty($bucket,OSS_BUCKET_IS_NOT_ALLOWED_EMPTY);
 
 		//object
 		$this->is_empty($object,OSS_OBJECT_IS_NOT_ALLOWED_EMPTY);
-
 		$options[self::OSS_BUCKET] = $bucket;
 		$options[self::OSS_METHOD] = self::OSS_HTTP_GET;
 		$options[self::OSS_OBJECT] = $object;
-
 		$response = $this->get_object_meta($bucket, $object,$options);
 		return $response;
 	}
