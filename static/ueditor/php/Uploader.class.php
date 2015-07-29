@@ -118,7 +118,7 @@ class Uploader
          */
         include_once("oss.php");
         $serverpath = $file["tmp_name"];
-        $osspath = "/" . $this->fullName;
+        $osspath =  $this->fullName;
         $ossboj = new OSSobj();
         $isok = $ossboj->upload_by_multi_part($serverpath, $osspath);
         if ($isok) {
@@ -481,7 +481,6 @@ class Uploader
         $format = str_replace("{ii}", $d[5], $format);
         $format = str_replace("{ss}", $d[6], $format);
         $format = str_replace("{time}", $t, $format);
-
         //过滤文件名的非法自负,并替换文件名
         $oriName = substr($this->oriName, 0, strrpos($this->oriName, '.'));
         $oriName = preg_replace("/[\|\?\"\<\>\/\*\\\\]+/", '', $oriName);

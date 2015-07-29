@@ -31,6 +31,7 @@ class OSSobj
             'partSize' => 5242880
         );
         $is_object_exist = $this->ossobj->is_object_exist($this->ossbuket, $osspath);
+
         $isexist = $is_object_exist->isOK();
         if (!$isexist) {
             $response = $this->ossobj->create_mpu_object($this->ossbuket, $osspath, $options);
