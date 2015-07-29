@@ -300,6 +300,9 @@ class ALIOSS{
 		}else{
 			$this->hostname = $hostname;
 		}
+
+		//设置开启三级域名，三级域名需要注意，域名不支持一些特殊符号，所以在创建bucket的时候若想使用三级域名，最好不要使用特殊字符
+		$this->set_enable_domain_style(DOMAIN_THREE);
 	}
 
 

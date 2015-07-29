@@ -18,7 +18,7 @@ class OSSobj
         $this->ossbuket = OSS_BUCKET;
         $this->ossid = OSS_ACCESS_ID;
         $this->osskey = OSS_ACCESS_KEY;
-        $this->ossserver = OSS_SERVER;
+        $this->ossserver = IMG_REQUEST_URL;
         $this->ossobj = new ALIOSS($this->ossid, $this->osskey, $this->ossserver);
     }
 

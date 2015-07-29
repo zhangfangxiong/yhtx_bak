@@ -17,25 +17,24 @@ class Oss_Index
             self::$alioss = new ALIOSS();
             //设置是否打开curl调试模式
             self::$alioss->set_debug_mode(false);
-            //设置开启三级域名，三级域名需要注意，域名不支持一些特殊符号，所以在创建bucket的时候若想使用三级域名，最好不要使用特殊字符
-            self::$alioss->set_enable_domain_style(DOMAIN_THREE);
         }
         return self::$alioss;
     }
 
     /**
      * 图片上传(通过路径上传)
+     * @param $sFrom上传来源，对应OSS中的文件夹名
+     * @return string
      */
-    public static function uploadImage()
+    public static function uploadImage($sFrom)
     {
         $oss_sdk_service = self::getAliOss();
-        //$content = self::getUploadFiles();
         $aImageType = explode('/',$_FILES['file']['type']);
         $sImageFix = $aImageType[1];
         $bucket = OSS_BUCKET;
         $folder = OSS_UPLOAD_PATH;
 
-        $object = $folder . md5($_FILES['file']['name'].time()) .'.'.$sImageFix;
+        $object = $folder .$sFrom.'/'. md5($_FILES['file']['name'].time()) .'.'.$sImageFix;
         $file_path = $_FILES['file']['tmp_name'];
         $options['Content-Type'] = $_FILES['file']['type'];
 

@@ -4,6 +4,7 @@ $('.plupload').each(function() {
 		runtimes : 'html5,flash,silverlight,html4',
 		browse_button : ele,
 		url : sUploadUrl,
+		multipart_params: {'from': 'uploadjs'}, //设置你的参数
 		flash_swf_url : static_url + '/plupload/Moxie.swf',
 		silverlight_xap_url : static_url + '/plupload/Moxie.xap',
 		filters : {
