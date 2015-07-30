@@ -59,7 +59,46 @@ placeholder
         </div>
         <div class="col-sm-4 validate_checktip"></div>
     </div>
-    <div class="form-group has-feedback">
+    <div class="form-group">
+        <label class="control-label col-sm-2"><strong style="color:red;">*</strong> 解锁类型：</label>
+
+        <div class="col-sm-3">
+            <select class="form-control" name="iUnlockType">
+                <option value="-1">请选择</option>
+                <option
+                    value="1" <?php echo isset($aParam['iUnlockType']) && 1 == $aParam['iUnlockType'] ? 'selected' : '' ?>>
+                    <?php echo $aUnlockType[1] ?>
+                </option>
+                <option
+                    value="0" <?php echo isset($aParam['iUnlockType']) && 0 == $aParam['iUnlockType'] ? 'selected' : '' ?>>
+                    <?php echo $aUnlockType[0] ?>
+                </option>
+            </select>
+        </div>
+        <div class="col-sm-4 validate_checktip"></div>
+    </div>
+    <div class="form-group" id="unlocklevel">
+        <label class="control-label col-sm-2"><strong style="color:red;">*</strong> 解锁级别：</label>
+
+        <div class="col-sm-3">
+            <select name="iUnlockLevel" class="form-control input-validate">
+                <option value="-1">请选择</option>
+                <?php
+                if (!empty($aUnlockLevel)) {
+                    $iUnlockLevel = isset($aParam['iUnlockLevel']) ? $aParam['iUnlockLevel'] : '';
+                    foreach ($aUnlockLevel as $v) {
+                        ?>
+                        <option
+                            value="<?php echo $v ?>" <?php echo $v == $iUnlockLevel ? 'selected' : ''; ?>><?php echo $v ?>
+                            级
+                        </option>
+                    <?php }
+                } ?>
+            </select>
+        </div>
+        <div class="col-sm-4 validate_checktip"></div>
+    </div>
+    <div class="form-group has-feedback" id="unlockpoint">
         <label class="col-sm-2 control-label"><strong style="color:red;">*</strong> 解锁所需解锁点：</label>
 
         <div class="col-sm-3">
@@ -101,45 +140,6 @@ placeholder
                        value="1" <?php echo isset($aData['iIsRecommend']) ? 'checked' : '' ?>> 推荐商品
             </label>
         </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-sm-2"><strong style="color:red;">*</strong> 解锁类型：</label>
-
-        <div class="col-sm-3">
-            <select class="form-control" name="iUnlockType">
-                <option value="-1">请选择</option>
-                <option
-                    value="1" <?php echo isset($aParam['iUnlockType']) && 1 == $aParam['iUnlockType'] ? 'selected' : '' ?>>
-                    <?php echo $aUnlockType[1] ?>
-                </option>
-                <option
-                    value="0" <?php echo isset($aParam['iUnlockType']) && 0 == $aParam['iUnlockType'] ? 'selected' : '' ?>>
-                    <?php echo $aUnlockType[0] ?>
-                </option>
-            </select>
-        </div>
-        <div class="col-sm-4 validate_checktip"></div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-sm-2"><strong style="color:red;">*</strong> 解锁级别：</label>
-
-        <div class="col-sm-3">
-            <select name="iUnlockLevel" class="form-control input-validate">
-                <option value="-1">请选择</option>
-                <?php
-                if (!empty($aUnlockLevel)) {
-                    $iUnlockLevel = isset($aParam['iUnlockLevel']) ? $aParam['iUnlockLevel'] : '';
-                    foreach ($aUnlockLevel as $v) {
-                        ?>
-                        <option
-                            value="<?php echo $v ?>" <?php echo $v == $iUnlockLevel ? 'selected' : ''; ?>><?php echo $v ?>
-                            级
-                        </option>
-                    <?php }
-                } ?>
-            </select>
-        </div>
-        <div class="col-sm-4 validate_checktip"></div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label"><strong style="color:red;">*</strong> 商品缩略图：</label>
@@ -184,20 +184,50 @@ placeholder
 <script type="text/javascript" charset="utf-8" src="<?php echo $sStaticRoot ?>/plupload/plupload.full.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="<?php echo $sStaticRoot ?>/js/upload.js"></script>
 <script type="text/javascript">
+    var unlockLevelNode = '';
+    var unlockPointNode = '';
+    function initUnlock(event) {
+        if (event.val() == -1) {//请选择
+            $('#unlocklevel').remove();
+            $('#unlockpoint').remove();
+        } else if (event.val() == 0) {//级别解锁
+            event.insertAfter(unlockLevelNode);
+            $('#unlockpoint').remove();
+        } else if (event.val() == 1) {//解锁点解锁
+            event.insertAfter(unlockPointNode);
+            $('#unlocklevel').remove();
+        }
+    }
     $(function () {
+        //初始化解锁类型相关
+        unlockLevelNode = $('#unlocklevel').prop('outerHTML');
+        unlockPointNode = $('#unlockpoint').prop('outerHTML');
+        initUnlock($("select[name='iUnlockType']"));
+        $("select[name='iUnlockType']").change(function () {
+            initUnlock($(this));
+        });
         $("#myform").validate({
-            submitHandler: function (form) {
-                $.post(form.action, $(form).serialize(), function (ret) {
-                    alert(ret.data);
-                    if (ret.status) {
-                        location.href = '<?php echo $sListUrl; ?>';
-                    }
-                }, 'json');
+        submitHandler: function (form) {
+            if ($("select[name='iUnlockType']").val() == -1){
+                alert('请选择解锁种类');
                 return false;
             }
-        });
-
+            if ($("select[name='icatID']").val() == -1){
+                alert('请选择商品分类');
+                return false;
+            }
+            $.post(form.action, $(form).serialize(), function (ret) {
+                alert(ret.data);
+                if (ret.status) {
+                    location.href = '<?php echo $sListUrl; ?>';
+                }
+            }, 'json');
+            return false;
+        }
     });
+
+    })
+    ;
 
     //编辑器
     UE.getEditor('editor').ready(function () {

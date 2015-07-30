@@ -51,6 +51,7 @@ class Controller_Goods_Index extends Controller_Base
     public function addAction()
     {
         if ($this->isPost()) {
+            echo 1111;die;
             $aNews = $this->_checkData();
             if (empty($aNews)) {
                 return null;
