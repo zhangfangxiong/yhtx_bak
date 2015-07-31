@@ -217,6 +217,10 @@ placeholder
                     alert('请选择商品分类');
                     return false;
                 }
+                if ($('#sImage').val() == '') {
+                    alert('请选择商品分类');
+                    return false;
+                }
                 $.post(form.action, $(form).serialize(), function (ret) {
                     alert(ret.data);
                     if (ret.status) {
