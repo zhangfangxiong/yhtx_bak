@@ -59,7 +59,7 @@ placeholder
         </div>
         <div class="col-sm-4 validate_checktip"></div>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="unlockType">
         <label class="control-label col-sm-2"><strong style="color:red;">*</strong> 解锁类型：</label>
 
         <div class="col-sm-3">
@@ -113,7 +113,7 @@ placeholder
 
         <div class="col-sm-3">
             <select name="icatID" class="form-control input-validate col-sm-10">
-                <option value="0">请选择</option>
+                <option value="-1">请选择</option>
                 <?php
                 if (!empty($aTree)) {
                     $iCategoryID = isset($aData['icatID']) ? $aData['icatID'] : '';
@@ -184,48 +184,57 @@ placeholder
 <script type="text/javascript" charset="utf-8" src="<?php echo $sStaticRoot ?>/plupload/plupload.full.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="<?php echo $sStaticRoot ?>/js/upload.js"></script>
 <script type="text/javascript">
-    var unlockLevelNode = '';
-    var unlockPointNode = '';
+    var unlockLevelNode;
+    var unlockPointNode;
     function initUnlock(event) {
         if (event.val() == -1) {//请选择
-            $('#unlocklevel').remove();
-            $('#unlockpoint').remove();
+            $('#unlocklevel').detach();
+            $('#unlockpoint').detach();
         } else if (event.val() == 0) {//级别解锁
-            event.insertAfter(unlockLevelNode);
-            $('#unlockpoint').remove();
+            $('#unlockType').after(unlockLevelNode);
+            $('#unlockpoint').detach();
         } else if (event.val() == 1) {//解锁点解锁
-            event.insertAfter(unlockPointNode);
-            $('#unlocklevel').remove();
+            $('#unlockType').after(unlockPointNode);
+            $('#unlocklevel').detach();
         }
     }
     $(function () {
-        //初始化解锁类型相关
-        unlockLevelNode = $('#unlocklevel').prop('outerHTML');
-        unlockPointNode = $('#unlockpoint').prop('outerHTML');
+        $("#myform").validate({
+            submitHandler: function (form) {
+                if ($("select[name='iUnlockType']").val() == -1) {
+                    alert('请选择解锁种类');
+                    return false;
+                } else if ($("select[name='iUnlockType']").val() == 0 && $("select[name='iUnlockLevel']").val() == -1) {
+                    alert('请选择解锁级别');
+                    return false;
+                } else if ($("select[name='iUnlockType']").val() == 1 && $("input[name='iUnlockPoint']").val() == '') {
+                    alert('请填写所需解锁点');
+                    return false;
+                } else {
+
+                }
+                if ($("select[name='icatID']").val() == -1) {
+                    alert('请选择商品分类');
+                    return false;
+                }
+                $.post(form.action, $(form).serialize(), function (ret) {
+                    alert(ret.data);
+                    if (ret.status) {
+                        location.href = '<?php echo $sListUrl; ?>';
+                    }
+                }, 'json');
+                return false;
+            }
+        });
+
+        //初始化解锁类型相关(尼玛这个要写到validate方法后面，调试一下午)
+        unlockLevelNode = $('#unlocklevel').detach();//remove不保留事件
+        unlockPointNode = $('#unlockpoint').detach();
         initUnlock($("select[name='iUnlockType']"));
+
         $("select[name='iUnlockType']").change(function () {
             initUnlock($(this));
         });
-        $("#myform").validate({
-        submitHandler: function (form) {
-            if ($("select[name='iUnlockType']").val() == -1){
-                alert('请选择解锁种类');
-                return false;
-            }
-            if ($("select[name='icatID']").val() == -1){
-                alert('请选择商品分类');
-                return false;
-            }
-            $.post(form.action, $(form).serialize(), function (ret) {
-                alert(ret.data);
-                if (ret.status) {
-                    location.href = '<?php echo $sListUrl; ?>';
-                }
-            }, 'json');
-            return false;
-        }
-    });
-
     })
     ;
 
