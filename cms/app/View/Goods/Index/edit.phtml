@@ -12,7 +12,7 @@ placeholder
         <label class="col-sm-2 control-label"><strong style="color:red;">*</strong> 商品名称：</label>
 
         <div class="col-sm-3">
-            <input type="text" class="form-control input-validate" validate="!length:2-20" name="sName"
+            <input type="text" class="form-control input-validate" validate="!clength:2-20" name="sName"
                    value="<?php echo isset($aData['sName']) ? $aData['sName'] : '' ?>">
             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
         </div>
@@ -22,7 +22,7 @@ placeholder
         <label class="col-sm-2 control-label"><strong style="color:red;">*</strong>商品描述：</label>
 
         <div class="col-sm-3 has-feedback">
-            <textarea class="form-control" rows="3" validate="!length:2-200" name="sDesc">
+            <textarea class="form-control" rows="3" validate="!clength:2-200" name="sDesc">
                 <?php echo isset($aData['sDesc']) ? $aData['sDesc'] : '' ?>
             </textarea>
             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
@@ -154,8 +154,7 @@ placeholder
                      echo '';
                  } ?>">
             <input type="button" value="选择" class="plupload" data-target="#sImage" data-img="#sImageShow">
-            <span class="text-muted">请上传比例为4:3，尺寸大于400*300的清晰图片，文件大小≤100K支持png、jpg</span>
-            <span class="validate_checktip"></span>
+            <span>请上传比例为4:3，尺寸大于400*300的清晰图片，文件大小≤100K支持png、jpg</span>
         </div>
         <div class="col-sm-4 validate_checktip"></div>
     </div>
@@ -218,7 +217,11 @@ placeholder
                     return false;
                 }
                 if ($('#sImage').val() == '') {
-                    alert('请选择商品分类');
+                    alert('请选择上传商品缩略图');
+                    return false;
+                }
+                if (UE.getEditor('editor').hasContents() == false) {
+                    alert('请填写商品内容');
                     return false;
                 }
                 $.post(form.action, $(form).serialize(), function (ret) {
@@ -248,7 +251,4 @@ placeholder
         this.setContent('<?php echo isset($aData['sContent']) ? $aData['sContent'] : ''; ?>');
         this.setHeight(300);
     });
-    $('#media').submit(function () {
-        //做验证
-    })
 </script>
