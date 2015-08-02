@@ -8,6 +8,7 @@ class Controller_Goods_Index extends Controller_Base
     public function indexAction()
     {
         $aParam = $this->_getParams(0);
+        print_r($aParam);die;
 
         $iPage = intval($this->getParam('page'));
         $sOrder = !empty($aParam['sOrder']) ? $aParam['sOrder'] : 'iUpdateTime DESC';
