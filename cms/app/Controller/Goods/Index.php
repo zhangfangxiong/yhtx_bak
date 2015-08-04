@@ -7,27 +7,8 @@ class Controller_Goods_Index extends Controller_Base
      */
     public function indexAction()
     {
-        $aParam = array();
-        $aParam['iID'] = intval($this->getParam('iID'));//id
-        $aParam['sName'] = $this->getParam('sName');//产品名称
-        $aParam['sDesc'] = $this->getParam('sDesc');//产品描述
-        $aParam['iCostsStart'] = intval($this->getParam('iCostsStart'));//成本开始价
-        $aParam['iCostsEnd'] = intval($this->getParam('iCostsEnd'));//成本结束价
-        $aParam['iPriceStart'] = intval($this->getParam('iPriceStart'));//起始价格
-        $aParam['iPriceEnd'] = intval($this->getParam('iPriceEnd'));//结束价格
-        $aParam['iCatID'] = intval($this->getParam('iCatID'));//种类ID
-        $aParam['iIsHot'] = intval($this->getParam('iIsHot'));//是否热门
-        $aParam['iIsRecommend'] = intval($this->getParam('iIsRecommend'));//是否推荐
-        $aParam['iSTime'] = intval($this->getParam('iSTime'));//发布开始时间
-        $aParam['iETime'] = intval($this->getParam('iETime'));//发布结束时间
-        $aParam['iUnlockType'] = intval($this->getParam('iUnlockType'));//解锁类型
-        $aParam['iAgentRateStart'] = intval($this->getParam('iAgentRateStart'));//代理商提成比例
-        $aParam['iAgentRateEnd'] = intval($this->getParam('iAgentRateEnd'));//代理商提成比例
-        $aParam['iUnlockLevel'] = intval($this->getParam('iUnlockLevel'));//解锁等级
-        $aParam['iUnlockPointStart'] = intval($this->getParam('iUnlockPointStart'));//解锁所需解锁点
-        $aParam['iUnlockPointEnd'] = intval($this->getParam('iUnlockPointEnd'));//解锁所需解锁点
-        $aParam['iPublishStatus'] = intval($this->getParam('iPublishStatus'));//发布状态
-
+        $aParam = $this->_getParams(0);
+        print_r($aParam);die;
 
         $iPage = intval($this->getParam('page'));
         $sOrder = !empty($aParam['sOrder']) ? $aParam['sOrder'] : 'iUpdateTime DESC';
@@ -51,26 +32,20 @@ class Controller_Goods_Index extends Controller_Base
     public function addAction()
     {
         if ($this->isPost()) {
-            echo 1111;die;
-            $aNews = $this->_checkData();
-            if (empty($aNews)) {
+            $aData = $this->_checkData(1);
+            if (empty($aData)) {
                 return null;
             }
-            $sAction = '保存';
-            if ($this->getParam('iOptype') > 0) {
-                $aNews['iPublishStatus'] = 1;//发布需要将该字段改为1
-                $sAction = '发布';
-            }
+            $aData['iPublishStatus'] = 0;//发布需要将该字段改为1
             //增加需要加上当前添加人ID
             $aCurrUserInfo = $this->aCurrUser;
-            $aNews['iUpdateUserID'] = $aCurrUserInfo['iUserID'];
-            $aNews['iCreateUserID'] = $aCurrUserInfo['iUserID'];
-            $iNewsID = Model_News::addData($aNews);
+            $aData['iUpdateUserID'] = $aData['iCreateUserID'] = $aCurrUserInfo['iUserID'];
+            $iGoodsID = Model_Goods::addData($aData);
 
-            if ($iNewsID > 0) {
-                return $this->showMsg(['sMsg' => '资讯信息' . $sAction . '成功！', 'iNewsID' => $iNewsID], true);
+            if ($iGoodsID > 0) {
+                return $this->showMsg('商品添加成功！', true);
             } else {
-                return $this->showMsg('资讯信息' . $sAction . '失败！', false);
+                return $this->showMsg('商品添加失败！', false);
             }
         } else {
             $this->_response->setHeader('Access-Control-Allow-Origin', '*.*');
@@ -271,110 +246,94 @@ class Controller_Goods_Index extends Controller_Base
 
     /**
      * 接收param方法
-     * param $newid 0:接收数据,大于0:表中获取数据,通过传进来的newsid获取
-     * return array
+     * @param $iType 0:搜索,1:添加,2:编辑
+     * @return mixed
      */
-    private function _getParams()
+    private function _getParams($iType)
     {
-        return $aRow = array(
-            'sTitle' => trim($this->getParam('sTitle')),
-            'iCityID' => $this->_getCityID(),
-            'iCategoryID' => intval($this->getParam('iCategoryID')),
-            'sAuthor' => $this->getParam('sAuthor'),
-            'iAuthorID' => $this->getParam('iAuthorID'),
-            'sAbstract' => $this->getParam('sAbstract'),
-            'sContent' => $this->getParam('sContent'),
-            'sLoupanID' => trim($this->getParam('sLoupanID')),
-            'sSource' => $this->getParam('sSource'),
-            'sTag' => trim($this->getParam('sTag')),
-            'sKeyword' => $this->getParam('sKeyword'),
-            'sImage' => $this->getParam('sImage'),
-            'sShortTitle' => $this->getParam('sShortTitle'),
-            'iPublishTime' => strtotime($this->getParam('iPublishTime')),
-            'iTypeID' => $this->_getTypeID(),
-            'iOptype' => $this->getParam('iOptype') ? $this->getParam('iOptype') : 0,//操作类型0：保存,1：发布
-            'sMedia' => trim($this->getParam('sMedia'))
-        );
+        if ($iType == 0 || $iType == 2) {
+            $aParam['iID'] = intval($this->getParam('iID'));//id
+        }
+        if ($iType == 0) {
+            $aParam['iCostsStart'] = intval($this->getParam('iCostsStart'));//成本开始价
+            $aParam['iCostsEnd'] = intval($this->getParam('iCostsEnd'));//成本结束价
+            $aParam['iPriceStart'] = intval($this->getParam('iPriceStart'));//起始价格
+            $aParam['iPriceEnd'] = intval($this->getParam('iPriceEnd'));//结束价格
+            $aParam['iSTime'] = intval($this->getParam('iSTime'));//发布开始时间
+            $aParam['iETime'] = intval($this->getParam('iETime'));//发布结束时间
+            $aParam['iAgentRateStart'] = intval($this->getParam('iAgentRateStart'));//代理商提成开始比例
+            $aParam['iAgentRateEnd'] = intval($this->getParam('iAgentRateEnd'));//代理商提成结束比例
+            $aParam['iUnlockPointStart'] = intval($this->getParam('iUnlockPointStart'));//解锁所需解锁点
+            $aParam['iUnlockPointEnd'] = intval($this->getParam('iUnlockPointEnd'));//解锁所需解锁点
+            $aParam['iPublishStatus'] = intval($this->getParam('iPublishStatus'));//发布状态
+        }
+        if ($iType == 1 || $iType == 2 ) {
+            $aParam['iCosts'] = intval($this->getParam('iCosts'));//成本价
+            $aParam['iPrice'] = intval($this->getParam('iPrice'));//价格
+            $aParam['iUnlockType'] = intval($this->getParam('iUnlockType'));//解锁类型
+            $aParam['iAgentRate'] = intval($this->getParam('iAgentRate'));//代理商提成比例
+            $aParam['iUnlockLevel'] = intval($this->getParam('iUnlockLevel'));//解锁等级
+            $aParam['iUnlockPoint'] = intval($this->getParam('iUnlockPoint'));//解锁所需解锁点
+            $aParam['sThumbImg'] = $this->getParam('sImage');//缩略图
+            $aParam['sContent'] = htmlspecialchars($this->getParam('editorValue'));//内容
+        }
+        $aParam['sName'] = $this->getParam('sName');//产品名称
+        $aParam['sDesc'] = $this->getParam('sDesc');//产品描述
+        $aParam['iCatID'] = intval($this->getParam('iCatID'));//种类ID
+        $aParam['iIsHot'] = intval($this->getParam('iIsHot'));//是否热门
+        $aParam['iIsRecommend'] = intval($this->getParam('iIsRecommend'));//是否推荐
+        return $aParam;
     }
 
 
     /**
      * 请求数据检测
-     * @param $sType 操作类型 add:添加,edit:修改:
-     * @param $iOptype 操作类型 0:保存,1:发布
-     * @return mixed
-     *
+     * @param int $iType
+     * @param array $param
+     * @return array|bool
      */
-    public function _checkData($sType = 'add', $param = array())
+    public function _checkData($iType,$param = array())
     {
-        $aRow = empty($param) ? $this->_getParams() : $param;
-        //保存和发布都需要做的判断
-        if (!Util_Validate::isCLength($aRow['sTitle'], 5, 22)) {
-            return $this->showMsg('资讯标题长度范围为5到22个字！', false);
+        $aRow = empty($param) ? $this->_getParams($iType) : $param;
+        if (!Util_Validate::isCLength($aRow['sName'], 2, 20)) {
+            return $this->showMsg('商品标题长度范围为2到20个字！', false);
         }
-        if (!empty($param) || $aRow['iOptype'] > 0) {
-            if (!Util_Validate::isCLength($aRow['sShortTitle'], 5, 15)) {
-                return $this->showMsg('短标题长度范围为5到15个字！', false);
-            }
-            if (!Util_Validate::isCLength($aRow['sAuthor'], 2, 20)) {
-                return $this->showMsg('资讯作者长度范围为2到20个字！', false);
-            }
-            if (!Util_Validate::isCLength($aRow['sMedia'], 1, 20)) {
-                return $this->showMsg('媒体来源长度范围为1到20个字！', false);
-            }
-            if (!Util_Validate::isCLength($aRow['sKeyword'], 2, 50)) {
-                return $this->showMsg('关键字长度范围为2到20个字！', false);
-            }
-            if (empty($aRow['sImage'])) {
-                return $this->showMsg('请选择一张默认图片！', false);
-            }
-            if (!Util_Validate::isCLength($aRow['sAbstract'], 60, 90)) {
-                return $this->showMsg('资讯摘要长度范围为60到90个字！', false);
-            }
-            if (!Util_Validate::isCLength($aRow['sContent'], 100, 16777215)) {
-                return $this->showMsg('资讯内容长度范围为100到65535个字！', false);
-            }
-            if ($aRow['iCategoryID'] < 0) {
-                return $this->showMsg('请选择一个资讯分类！', false);
-            }
-            if ($aRow['iPublishTime'] == 0) {
-                $iPublishTime = time();
-            }
-            if (!Model_Author::getAuthorByName($aRow['sAuthor'])) {
-                return $this->showMsg('作者不存在', false);
-            }
-            /**
-            if (Model_News::EVALUATION_NEWS == $this->_getTypeID()) {
-                if (empty($aRow['sLoupanID'])) {
-                    return $this->showMsg('请添加推送楼盘', false);
-                }
-            }*/
-            if ($aRow['sLoupanID']) {
-                $aLoupanID = explode(',', $aRow['sLoupanID']);
-                foreach ($aLoupanID as $key => $value) {
-                    if (!Model_CricUnit::getLoupanByID($value)) {
-                        unset($aLoupanID[$key]);
-                        $iLouChange = 1;//楼盘ID过滤标记
-                        //return $this->showMsg('推送楼盘不存在', false);
-                    }
-                }
-                if (isset($iLouChange)) {
-                    $aRow['sLoupanID'] = implode(',',$aLoupanID);
-                }
-            }
-
-            if ($aRow['sTag']) {
-                $sTag = explode(',', $aRow['sTag']);
-                foreach ($sTag as $key => $value) {
-                    $aTag = Model_Tag::getDetail($value);
-                    if (empty($aTag) || $aTag['iStatus'] != 1 || $aTag['iTypeID'] != $this->_getTypeTag()) {
-                        return $this->showMsg('资讯标签不存在,无效标签名称为（' . $value . ')', false);
-                    }
-                }
+        if (!Util_Validate::isCLength($aRow['sDesc'], 2, 20)) {
+            return $this->showMsg('商品描述长度范围为2到200个字！', false);
+        }
+        if (!Util_Validate::isFloat($aRow['iCosts'])) {
+            return $this->showMsg('商品成本必须是数字！', false);
+        }
+        if (!Util_Validate::isFloat($aRow['iPrice'])) {
+            return $this->showMsg('商品价格必须是数字！', false);
+        }
+        if (!Util_Validate::isInt($aRow['iCatID'])) {
+            return $this->showMsg('商品类别必须是数字！', false);
+        }
+        if (!Util_Validate::isInt($aRow['iAgentRate'])) {
+            return $this->showMsg('代理商比例必须是数字！', false);
+        }
+        if ($aRow['iUnlockType'] == -1) {
+            return $this->showMsg('请选择商品解锁类型！', false);
+        }
+        if ($aRow['iUnlockType'] == 0 && $aRow['iUnlockLevel'] <= 0) {
+            return $this->showMsg('请选择商品解锁级别！', false);
+        }
+        if ($aRow['iUnlockType'] == 0 && $aRow['iUnlockPoint'] == 0) {
+            return $this->showMsg('请选择商品解锁点！', false);
+        }
+        if ($aRow['sThumbImg'] == '') {
+            return $this->showMsg('商品缩略图不能为空', false);
+        }
+        if ($aRow['iPrice'] < $aRow['iCosts']*2) {
+            return $this->showMsg('价格必须为成本的2倍以上', false);
+        }
+        if ($iType == 1) {
+            $aGoods = Model_Goods::getGoodsByName($aRow['sName']);
+            if ($aGoods['sName'] == $aRow['sName']) {
+                return $this->showMsg('商品名称不能重复', false);
             }
         }
-        //去掉非字段的元素
-        unset($aRow['iOptype']);
         return $aRow;
     }
 

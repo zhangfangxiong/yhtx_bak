@@ -14,11 +14,11 @@ class Model_Goods extends Model_Base
      * @param unknown $sTagName
      * @return Ambigous <number, multitype:, mixed>
      */
-    public static function getGoodsByName($sTitle)
+    public static function getGoodsByName($sName)
     {
         return self::getRow(array(
             'where' => array(
-                'sTitle' => $sTitle
+                'sName' => $sName
             )
         ));
     }
