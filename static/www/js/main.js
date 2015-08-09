@@ -443,6 +443,7 @@ function showSendMsgWin(username,user_id){
 
 	if(user_id=="1640"){
 		//这个依赖第三方
+
 		//doyoo.util.openChat('g=58308');
 		//mechatClick();
 		//sixinMsgNoteShow();
